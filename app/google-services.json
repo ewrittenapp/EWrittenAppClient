@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "156590151776",
+    "firebase_url": "https://final-project-d2fd7.firebaseio.com",
+    "project_id": "final-project-d2fd7",
+    "storage_bucket": "final-project-d2fd7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:156590151776:android:7b4d129615aad181",
+        "android_client_info": {
+          "package_name": "com.fyproject.shrey.ewrittenappclient"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "156590151776-il7p4r9g3j4cig8jt7omfu0joo1o61i6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDMfgY5YuMpx6sdu5IgGwf97B2OQrB7afY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
