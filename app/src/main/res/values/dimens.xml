@@ -3,5 +3,14 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
-    <dimen name="logo_w_h">100dp</dimen>
+    <dimen name="logo_w_h">120dp</dimen>
+    <dimen name="et_height">45dp</dimen>
+    <dimen name="et_mb">20dp</dimen>
+    <dimen name="et_ml">10dp</dimen>
+    <dimen name="et_mr">10dp</dimen>
+    <dimen name="et_drawable_padding">20dp</dimen>
+    <dimen name="et_pb">8dp</dimen>
+    <dimen name="et_pl">12dp</dimen>
+    <dimen name="et_pr">12dp</dimen>
+    <dimen name="et_pt">8dp</dimen>
 </resources>
