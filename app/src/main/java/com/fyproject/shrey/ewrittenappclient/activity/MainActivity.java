@@ -28,11 +28,11 @@ import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity {
 
-    public final String TAG="TAG";
-    public  String STUDENT;
-    public  String FACULTY;
-    private boolean isFirebaseConnected=false;
-    public static boolean persistanceEnabled=false;
+    public final String TAG = "TAG";
+    public String STUDENT;
+    public String FACULTY;
+    private boolean isFirebaseConnected = false;
+    public static boolean persistanceEnabled = false;
 
     private FirebaseAuth auth;
     private FirebaseAuth.AuthStateListener authStateListener;
@@ -52,16 +52,16 @@ public class MainActivity extends AppCompatActivity {
         FACULTY = getString(R.string.faculty);
 
 
-        if(!persistanceEnabled){
+        if (!persistanceEnabled) {
             FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-            persistanceEnabled=true;
+            persistanceEnabled = true;
         }
 
         //session = new SessionManager(this);
-        dbref=FirebaseDatabase.getInstance().getReference();
-        auth=FirebaseAuth.getInstance();
+        dbref = FirebaseDatabase.getInstance().getReference();
+        auth = FirebaseAuth.getInstance();
 
-        toolbar= (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
 
@@ -75,20 +75,20 @@ public class MainActivity extends AppCompatActivity {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 if (user != null) { // User is signed in
 
-                    final StudentMain studentMainFragment=new StudentMain();
-                    final FacultyMain facultyMainFragment=new FacultyMain();
+                    final StudentMain studentMainFragment = new StudentMain();
+                    final FacultyMain facultyMainFragment = new FacultyMain();
 
                     //Fetch user type
-                    dbref.child("/userType/"+user.getUid()+"/").addListenerForSingleValueEvent(new ValueEventListener() {
+                    dbref.child("/userType/" + user.getUid() + "/").addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            userType= dataSnapshot.getValue(String.class);
-                            Log.d(TAG, "Fetch user type: "+userType);
-                            if(userType == null) return;
+                            userType = dataSnapshot.getValue(String.class);
+                            Log.d(TAG, "Fetch user type: " + userType);
+                            if (userType == null) return;
 
                             //Check type of user
-                            if(userType.equals(STUDENT)) {
-                                if(getSupportActionBar()!=null) {
+                            if (userType.equals(STUDENT)) {
+                                if (getSupportActionBar() != null) {
                                     getSupportActionBar().setDisplayShowHomeEnabled(true);
                                     getSupportActionBar().setTitle(R.string.student_home);
                                 }
@@ -97,26 +97,25 @@ public class MainActivity extends AppCompatActivity {
                                 transaction.replace(R.id.container, studentMainFragment);
                                 fragmentManager.popBackStack();
                                 transaction.commit();
-                            }
-                            else if(userType.equals(FACULTY)) {
-                                if(getSupportActionBar()!=null) {
+                            } else if (userType.equals(FACULTY)) {
+                                if (getSupportActionBar() != null) {
                                     getSupportActionBar().setDisplayShowHomeEnabled(true);
                                     getSupportActionBar().setTitle(R.string.faculty_home);
                                 }
 
                                 FragmentTransaction transaction = fragmentManager.beginTransaction();
-                                transaction.replace(R.id.container,facultyMainFragment);
+                                transaction.replace(R.id.container, facultyMainFragment);
                                 fragmentManager.popBackStack();
                                 transaction.commit();
-                            }
-                            else if(userType==null) {  // no session value available
+                            } else if (userType == null) {  // no session value available
                                 Log.d(TAG, "onAuthStateChanged: Unexpected:: no userType fetched");
                                 finish();
                             }
                         }
+
                         @Override
                         public void onCancelled(DatabaseError databaseError) {
-                            Log.d(TAG, "USERTYPE read> onCancelled: "+databaseError);
+                            Log.d(TAG, "USERTYPE read> onCancelled: " + databaseError);
                         }
                     });
                 } else { // User is signed out (User is null)
@@ -134,18 +133,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 isFirebaseConnected = snapshot.getValue(Boolean.class);
-                Log.d(TAG, "MainActivity onDataChange: FireBase Connection status: "+isFirebaseConnected);
+                Log.d(TAG, "MainActivity onDataChange: FireBase Connection status: " + isFirebaseConnected);
             }
+
             @Override
             public void onCancelled(DatabaseError error) {
-                Log.d(TAG, "check connection Error: "+error);
+                Log.d(TAG, "check connection Error: " + error);
             }
         });
-
-
-
-
-
 
 
     }
@@ -167,12 +162,13 @@ public class MainActivity extends AppCompatActivity {
 
         if (id == R.id.sign_out) {
 
-            if(isFirebaseConnected){
-              //  session.ClearUserType();
+            if (isFirebaseConnected) {
+                //  session.ClearUserType();
                 auth.signOut();
+                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                finish();
                 Log.d(TAG, "user signed out");
-            }
-            else Toast.makeText(this, "No Internet Connection", Toast.LENGTH_LONG).show();
+            } else Toast.makeText(this, "No Internet Connection", Toast.LENGTH_LONG).show();
             return true;
         }
 
