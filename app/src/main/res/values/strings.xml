@@ -8,6 +8,21 @@
     <string name="student">STUDENT</string>
     <string name="faculty">FACULTY</string>
 
+    <!--Different type of applications supported-->
+    <string name="leave">LEAVE APPLICATION</string>
+    <string name="bonafide">BONAFIDE CIRTIFICATE REQUEST</string>
+    <string name="custom">CUSTOM APPLICATION</string>
+
+    <string-array name="wAppType">
+        <item>@string/leave</item>
+        <item>@string/bonafide</item>
+        <item>@string/custom</item>
+    </string-array>
+
+    <!--firebase path-->
+    <string name="studentNode">/studentNode</string>
+
+
     <!--LOGIN/AUTHENTICATION layout string resource-->
     <string name="action_sign_in_short">Register</string>
     <string name="email">Email</string>

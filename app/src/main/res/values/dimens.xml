@@ -13,4 +13,6 @@
     <dimen name="et_pl">12dp</dimen>
     <dimen name="et_pr">12dp</dimen>
     <dimen name="et_pt">8dp</dimen>
+
+    <dimen name="fab_margin">16dp</dimen>
 </resources>

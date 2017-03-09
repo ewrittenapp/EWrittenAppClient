@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    >
+    <Spinner
+        android:id="@+id/spSelectFaculty"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"/>
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="select dates"/>
+
+            <Button
+                android:id="@+id/btnStartDatePicker"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Start Date"/>
+            <Button
+                android:id="@+id/btnEndDatePicker"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="End date"/>
+        </LinearLayout>]
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardUseCompatPadding="true">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Message"/>
+            <EditText
+                android:id="@+id/tvMessage"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:text="Reason for leave"
+                android:scrollbars="vertical"
+                android:gravity="start"/>
+        </LinearLayout>]
+    </android.support.v7.widget.CardView>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="submit"
+        android:layout_gravity="center"/>
+
+
+
+
+
+
+
+
+</LinearLayout>

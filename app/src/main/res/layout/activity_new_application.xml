@@ -7,22 +7,34 @@
     android:fitsSystemWindows="true"
     tools:context=".activity.NewApplication">
 
-    <android.support.design.widget.AppBarLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
+
 
         <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary">
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary">
 
-            <Spinner
-                android:id="@+id/spinner_nav"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                <Spinner
+                    android:id="@+id/spWAppType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
         </android.support.v7.widget.Toolbar>
-    </android.support.design.widget.AppBarLayout>
+
+
+        <FrameLayout
+            android:id="@+id/wAppTypeContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/toolbar"
+            ></FrameLayout>
+
+    </RelativeLayout>
+
+
 
     <!--<include layout="@layout/student_home" />-->
 
