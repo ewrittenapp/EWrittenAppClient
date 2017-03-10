@@ -22,8 +22,6 @@ import java.util.List;
 
 public class NewApplication extends AppCompatActivity {
 
-
-
     FragmentManager fragManager = getSupportFragmentManager();
     FragmentTransaction fragTransaction;
 
@@ -71,7 +69,7 @@ public class NewApplication extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        finish();
+
     }
 
     @Override
@@ -87,10 +85,7 @@ public class NewApplication extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-
         if (id == R.id.sign_out) {
-
             return true;
         }
 

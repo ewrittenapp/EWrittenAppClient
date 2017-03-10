@@ -88,6 +88,7 @@ public class LeaveFragment extends Fragment implements DatePickerDialog.OnDateSe
                             FacultyList faculty= ds.getValue(FacultyList.class);
                             facultyNamesList.add(faculty.getName());
                             Log.d(TAG, "faculty fetched: "+faculty.getName());
+
                         }
                     }
 
@@ -104,6 +105,7 @@ public class LeaveFragment extends Fragment implements DatePickerDialog.OnDateSe
                 spAdapter.notifyDataSetChanged();
                 spAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spSelectFaculty.setAdapter(spAdapter);
+
 
 
 

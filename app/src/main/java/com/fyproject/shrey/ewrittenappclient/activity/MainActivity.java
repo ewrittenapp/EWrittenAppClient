@@ -67,87 +67,84 @@ public class MainActivity extends AppCompatActivity {
         FACULTY = getString(R.string.faculty);
 
 
+
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        final String studentNode=getString(R.string.studentNode);
+
         //** CHECK USER STATUS **//
-        authStateListener = new FirebaseAuth.AuthStateListener() {
+        if (user != null) { // User is signed in
 
-            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-            String userType;
-            String studentNode=getString(R.string.studentNode);
+            final StudentMain studentMainFragment=new StudentMain();
+            final FacultyMain facultyMainFragment=new FacultyMain();
 
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                if (user != null) { // User is signed in
+            //Fetch user type
+            fbRoot.child("/userType/"+user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                String userType;
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    userType= dataSnapshot.getValue(String.class);
+                    Log.d(TAG, "Fetch user type: "+userType);
+                    if(userType == null) return;
 
-                    final StudentMain studentMainFragment=new StudentMain();
-                    final FacultyMain facultyMainFragment=new FacultyMain();
-
-                    //Fetch user type
-                    fbRoot.child("/userType/"+user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            userType= dataSnapshot.getValue(String.class);
-                            Log.d(TAG, "Fetch user type: "+userType);
-                            if(userType == null) return;
-
-                            //Check type of user
-                            if(userType.equals(STUDENT)) {
-                                if(getSupportActionBar()!=null) {
-                                    getSupportActionBar().setDisplayShowHomeEnabled(true);
-                                    getSupportActionBar().setTitle(R.string.student_home);
-                                }
-                                //get details
-                                fbRoot.child(studentNode).child(user.getUid()).addListenerForSingleValueEvent(
-                                        new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                                StudentProfile sp=dataSnapshot.getValue(StudentProfile.class);
-                                                if(sp == null){
-                                                    Log.d(TAG, "onDataChange: student profile is NULL");
-                                                    return;
-                                                }
-                                                session.setCurrentUser(sp,STUDENT);
-                                            }
-                                            @Override
-                                            public void onCancelled(DatabaseError databaseError) {
-                                                Log.d(TAG, "Fetching profile: onCancelled: "+databaseError);
-                                            }
-                                        });
-
-
-                                fragTransaction = fragManager.beginTransaction();
-                                fragTransaction.replace(R.id.container, studentMainFragment);
-                                fragManager.popBackStack();
-                                fragTransaction.commit();
-                            }
-                            else if(userType.equals(FACULTY)) {
-                                if(getSupportActionBar()!=null) {
-                                    getSupportActionBar().setDisplayShowHomeEnabled(true);
-                                    getSupportActionBar().setTitle(R.string.faculty_home);
-                                }
-
-                                fragTransaction = fragManager.beginTransaction();
-                                fragTransaction.replace(R.id.container,facultyMainFragment);
-                                fragManager.popBackStack();
-                                fragTransaction.commit();
-                            }
-                            else if(userType==null) {  // no session value available
-                                Log.d(TAG, "onAuthStateChanged: Unexpected:: no userType fetched");
-                                finish();
-                            }
+                    //Check type of user
+                    if(userType.equals(STUDENT)) {
+                        if(getSupportActionBar()!=null) {
+                            getSupportActionBar().setDisplayShowHomeEnabled(true);
+                            getSupportActionBar().setTitle(R.string.student_home);
                         }
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-                            Log.d(TAG, "USERTYPE read> onCancelled: "+databaseError);
+                        //get details
+                        fbRoot.child(studentNode).child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener(){
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    StudentProfile sp=dataSnapshot.getValue(StudentProfile.class);
+                                    if(sp == null){
+                                        Log.d(TAG, "onDataChange: student profile is NULL");
+                                        return;
+                                    }
+                                    session.setCurrentUser(sp,STUDENT);
+                                }
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+                                    Log.d(TAG, "Fetching profile: onCancelled: "+databaseError);
+                                }
+                            });
+
+                        fragTransaction = fragManager.beginTransaction();
+                        fragTransaction.replace(R.id.container, studentMainFragment);
+
+                    }
+                    else if(userType.equals(FACULTY)) {
+                        if (getSupportActionBar() != null) {
+                            getSupportActionBar().setDisplayShowHomeEnabled(true);
+                            getSupportActionBar().setTitle(R.string.faculty_home);
                         }
-                    });
-                } else { // User is signed out (User is null)
-                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
-                    Log.d(TAG, "user is null");
-                    finish();
+                        fragTransaction = fragManager.beginTransaction();
+                        fragTransaction.replace(R.id.container, facultyMainFragment);
+                    }
+                    else if(userType==null) {  // no session value available
+                        Log.d(TAG, "onAuthStateChanged: Unexpected:: no userType fetched");
+                        finish();
+                    }
+
+                    fragManager.popBackStack();
+                    fragTransaction.commit();
+
+
                 }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Log.d(TAG, "USERTYPE read> onCancelled: "+databaseError);
+                }
+            });
 
-            }
-        };
+
+        } else { // User is signed out (User is null)
+            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+            Log.d(TAG, "user is null / signed out");
+            finish();
+        }
+
+
 
         //Check weather app is online or offline
         DatabaseReference connectedRef = FirebaseDatabase.getInstance().getReference(".info/connected");
@@ -163,12 +160,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG, "MainActivity onStart: ");
+    }
 
-
-
-
-
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG, "MainActivity onStop: ");
     }
 
     @Override
@@ -185,14 +188,12 @@ public class MainActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-
         if (id == R.id.sign_out) {
-
             if(isFirebaseConnected){
               //  session.ClearUserType();
                 auth.signOut();
                 Log.d(TAG, "user signed out");
-                startActivity(new Intent(MainActivity.this,LoginActivity.class));
+                startActivity(new Intent(MainActivity.this, LoginActivity.class));
                 finish();
             }
             else Toast.makeText(this, "No Internet Connection", Toast.LENGTH_LONG).show();
@@ -202,20 +203,6 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        auth.addAuthStateListener(authStateListener);
-        Log.d(TAG, "MainActivity onStart: ");
-    }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        Log.d(TAG, "MainActivity onStop: ");
-//        if (authStateListener != null) {
-//            auth.removeAuthStateListener(authStateListener);
-//        }
-    }
 
 }
