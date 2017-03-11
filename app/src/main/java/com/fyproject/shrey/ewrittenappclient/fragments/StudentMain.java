@@ -5,6 +5,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,12 +28,6 @@ public class StudentMain extends Fragment {
                              Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_student_main, container, false);
 
-
-
-
-
-
-
         //Create and send new app
         FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fabMain);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -44,11 +39,6 @@ public class StudentMain extends Fragment {
 
             }
         });
-
-
-
-
-
 
         return view;
     }
