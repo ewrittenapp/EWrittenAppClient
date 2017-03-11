@@ -32,6 +32,7 @@ public class wAppTypeAdapter {
         addFragment(x.getString(R.string.leave),new LeaveFragment());
         addFragment(x.getString(R.string.bonafide),new BonafideFragment());
         addFragment(x.getString(R.string.custom),new CustomWAppFragment());
+        addFragment(x.getString(R.string.custom),new ComplaintFragment());
 
     }
 

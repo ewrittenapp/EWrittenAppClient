@@ -12,6 +12,7 @@
     <string name="leave">LEAVE APPLICATION</string>
     <string name="bonafide">BONAFIDE CIRTIFICATE REQUEST</string>
     <string name="custom">CUSTOM APPLICATION</string>
+    <string name="complaint">COMPLAINT APPLICATION</string>
 
     <string-array name="wAppType">
         <item>@string/leave</item>
