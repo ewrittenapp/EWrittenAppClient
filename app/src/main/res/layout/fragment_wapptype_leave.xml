@@ -1,137 +1,189 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_margin="10dp"
+    android:orientation="vertical">
 
-    >
-    <Spinner
-        android:id="@+id/spSelectFaculty"
+    <android.support.v7.widget.CardView
+        android:layout_marginBottom="10dp"
         android:layout_width="match_parent"
-        android:layout_height="30dp"/>
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:text="Select Receiver"
+                android:textStyle="bold" />
+
+
+            <Spinner
+                android:id="@+id/spSelectFaculty"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:backgroundTint="@color/colorAccent" />
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <LinearLayout
-                android:orientation="horizontal"
-                android:weightSum="4"
-                android:gravity="center_vertical"
-                android:layout_margin="10dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:weightSum="4">
+
                 <TextView
-                    android:layout_weight="1"
-                    android:layout_margin="5dp"
-                    android:textStyle="bold"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="From: "/>
+                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    android:text="From: "
+                    android:textStyle="bold" />
+
                 <TextView
                     android:id="@+id/ivShowStartDate"
-                    android:layout_margin="5dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="25-1-2017"/>
+                    android:layout_margin="5dp"
+                    android:text="25-1-2017" />
+
                 <ImageView
                     android:id="@+id/ivStartDatePicker"
-                    android:layout_margin="5dp"
-                    android:src="@drawable/ic_calendar"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:src="@drawable/ic_calendar" />
             </LinearLayout>
 
             <LinearLayout
-                android:orientation="horizontal"
-                android:weightSum="4"
-                android:gravity="center_vertical"
-                android:layout_margin="10dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:weightSum="4">
+
                 <TextView
-                    android:layout_weight="1"
-                    android:layout_margin="5dp"
-                    android:textStyle="bold"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="To: "/>
+                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    android:text="To: "
+                    android:textStyle="bold" />
+
                 <TextView
                     android:id="@+id/ivShowEndDate"
-                    android:layout_margin="5dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="25-1-2017"/>
+                    android:layout_margin="5dp"
+                    android:text="25-1-2017" />
+
                 <ImageView
                     android:id="@+id/ivEndDatePicker"
-                    android:layout_margin="5dp"
-                    android:src="@drawable/ic_calendar"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:src="@drawable/ic_calendar" />
             </LinearLayout>
 
+        </LinearLayout>
 
-
-
-            <!--
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="select dates"/>
-
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Start Date"/>
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="End date"/>
-
-
-            -->
-
-        </LinearLayout>]
     </android.support.v7.widget.CardView>
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
         app:cardUseCompatPadding="true">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="10dp"
             android:orientation="vertical">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Message"/>
+                android:layout_margin="5dp"
+                android:text="Reason"
+                android:textStyle="bold" />
+
             <EditText
                 android:id="@+id/tvMessage"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:text="Reason for leave"
-                android:scrollbars="vertical"
-                android:gravity="start"/>
-        </LinearLayout>]
+                android:layout_height="150dp"
+                android:gravity="start"
+                android:hint="Describe your reason here ..."
+                android:inputType="textMultiLine"
+                android:scrollbars="vertical" />
+        </LinearLayout>
+
     </android.support.v7.widget.CardView>
 
-    <Button
-        android:layout_width="wrap_content"
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:text="Upload File(Optional): "
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:text="file not selected" />
+
+            <ImageView
+                android:id="@+id/ivFileUpload"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:src="@drawable/ic_upload" />
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@color/colorAccent"
         android:text="submit"
-        android:layout_gravity="center"/>
-
-
-
-
-
-
-
-
+        android:textColor="@color/white" />
 </LinearLayout>
