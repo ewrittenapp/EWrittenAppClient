@@ -10,9 +10,11 @@
 
     <!--Different type of applications supported-->
     <string name="leave">LEAVE APPLICATION</string>
-    <string name="bonafide">BONAFIDE CIRTIFICATE REQUEST</string>
+    <string name="bonafide">BONAFIDE CERTIFICATE REQUEST</string>
     <string name="custom">CUSTOM APPLICATION</string>
     <string name="complaint">COMPLAINT APPLICATION</string>
+    <string name="infrastructure">INFRASTRUCTURE APPLICATION</string>
+    <string name="organize_event">ORGANIZE EVENT APPLICATION</string>
 
     <string-array name="wAppType">
         <item>@string/leave</item>
