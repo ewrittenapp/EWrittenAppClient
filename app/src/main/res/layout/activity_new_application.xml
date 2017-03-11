@@ -25,14 +25,18 @@
         </android.support.v7.widget.Toolbar>
 
 
-        <FrameLayout
-            android:id="@+id/wAppTypeContainer"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+        <ScrollView
+            android:scrollbars="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
             android:layout_below="@+id/toolbar">
 
-        </FrameLayout>
-
+            <FrameLayout
+                android:id="@+id/wAppTypeContainer"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+            </FrameLayout>
+        </ScrollView>
     </RelativeLayout>
 
 

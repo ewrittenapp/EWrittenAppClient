@@ -6,9 +6,9 @@
     android:orientation="vertical">
 
     <android.support.v7.widget.CardView
-        android:layout_marginBottom="10dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -23,7 +23,6 @@
                 android:text="Select Receiver"
                 android:textStyle="bold" />
 
-
             <Spinner
                 android:id="@+id/spSelectFaculty"
                 android:layout_width="match_parent"
@@ -34,6 +33,31 @@
 
     </android.support.v7.widget.CardView>
 
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:text="Complaint type"
+                android:textStyle="bold" />
+
+            <Spinner
+                android:id="@+id/spComplaintType"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:backgroundTint="@color/colorAccent" />
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
@@ -43,72 +67,45 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="10dp"
             android:orientation="vertical">
 
-            <LinearLayout
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:weightSum="4">
+                android:layout_margin="5dp"
+                android:text="Level"
+                android:textStyle="bold" />
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:layout_weight="1"
-                    android:text="From: "
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/ivShowStartDate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:text="25-1-2017" />
-
-                <ImageView
-                    android:id="@+id/ivStartDatePicker"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:src="@drawable/ic_calendar" />
-            </LinearLayout>
-
-            <LinearLayout
+            <RadioGroup
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:weightSum="4">
+                android:weightSum="3">
 
-                <TextView
+                <RadioButton
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
                     android:layout_weight="1"
-                    android:text="To: "
-                    android:textStyle="bold" />
+                    android:buttonTint="@color/colorAccent"
+                    android:text="Sever" />
 
-                <TextView
-                    android:id="@+id/ivShowEndDate"
-                    android:layout_width="wrap_content"
+                <RadioButton
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:text="25-1-2017" />
+                    android:layout_weight="1"
+                    android:buttonTint="@color/colorAccent"
+                    android:text="Medium" />
 
-                <ImageView
-                    android:id="@+id/ivEndDatePicker"
-                    android:layout_width="wrap_content"
+                <RadioButton
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:src="@drawable/ic_calendar" />
-            </LinearLayout>
+                    android:layout_weight="1"
+                    android:buttonTint="@color/colorAccent"
+                    android:text="Low" />
+            </RadioGroup>
 
         </LinearLayout>
-
     </android.support.v7.widget.CardView>
 
     <android.support.v7.widget.CardView
@@ -126,15 +123,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:text="Reason"
+                android:text="Description"
                 android:textStyle="bold" />
 
             <EditText
-                android:id="@+id/tvReason"
+                android:id="@+id/tvDescription"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
                 android:gravity="start"
-                android:hint="Describe your reason here ..."
+                android:hint="Describe your problem here ..."
                 android:inputType="textMultiLine"
                 android:scrollbars="vertical" />
         </LinearLayout>
@@ -176,7 +173,6 @@
                 android:src="@drawable/ic_upload" />
         </LinearLayout>
     </android.support.v7.widget.CardView>
-
 
     <Button
         android:id="@+id/btnSubmit"

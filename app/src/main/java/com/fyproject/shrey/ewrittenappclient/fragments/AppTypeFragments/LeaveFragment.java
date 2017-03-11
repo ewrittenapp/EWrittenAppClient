@@ -48,8 +48,8 @@ public class LeaveFragment extends Fragment implements DatePickerDialog.OnDateSe
 
     private void initialization(View view){
         spSelectFaculty= (Spinner) view.findViewById(R.id.spSelectFaculty);
-        btnStartDatePicker= (Button) view.findViewById(R.id.btnStartDatePicker);
-        btnEndDatePicker= (Button) view.findViewById(R.id.btnEndDatePicker);
+        //btnStartDatePicker= (Button) view.findViewById(R.id.btnStartDatePicker);
+        //btnEndDatePicker= (Button) view.findViewById(R.id.btnEndDatePicker);
         session=new SessionManager(getContext());
         thisStudent = session.getCurrentUser();
 
