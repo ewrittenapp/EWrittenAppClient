@@ -18,21 +18,84 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:weightSum="4"
+                android:gravity="center_vertical"
+                android:layout_margin="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_weight="1"
+                    android:layout_margin="5dp"
+                    android:textStyle="bold"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="From: "/>
+                <TextView
+                    android:id="@+id/ivShowStartDate"
+                    android:layout_margin="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="25-1-2017"/>
+                <ImageView
+                    android:id="@+id/ivStartDatePicker"
+                    android:layout_margin="5dp"
+                    android:src="@drawable/ic_calendar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:weightSum="4"
+                android:gravity="center_vertical"
+                android:layout_margin="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_weight="1"
+                    android:layout_margin="5dp"
+                    android:textStyle="bold"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="To: "/>
+                <TextView
+                    android:id="@+id/ivShowEndDate"
+                    android:layout_margin="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="25-1-2017"/>
+                <ImageView
+                    android:id="@+id/ivEndDatePicker"
+                    android:layout_margin="5dp"
+                    android:src="@drawable/ic_calendar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+
+
+
+            <!--
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="select dates"/>
 
             <Button
-                android:id="@+id/btnStartDatePicker"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Start Date"/>
             <Button
-                android:id="@+id/btnEndDatePicker"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="End date"/>
+
+
+            -->
+
         </LinearLayout>]
     </android.support.v7.widget.CardView>
 
