@@ -15,4 +15,8 @@
     <dimen name="et_pt">8dp</dimen>
 
     <dimen name="fab_margin">16dp</dimen>
+
+    <dimen name="logo_dimension">30dp</dimen>
+
+
 </resources>
