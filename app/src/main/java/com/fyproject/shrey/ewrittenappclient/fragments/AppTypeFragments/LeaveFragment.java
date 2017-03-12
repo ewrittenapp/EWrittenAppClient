@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.ImageView;
 import android.widget.Spinner;
 
 import com.fyproject.shrey.ewrittenappclient.R;
@@ -35,8 +36,8 @@ import java.util.List;
 public class LeaveFragment extends Fragment implements DatePickerDialog.OnDateSetListener {
 
     Spinner spSelectFaculty;
-    private Button btnStartDatePicker;
-    private Button btnEndDatePicker;
+    private ImageView ivStartDatePicker;
+    private ImageView ivEndDatePicker;
     DatePickerDialog datePickerDialog;
 
     private DatabaseReference fbRoot;
@@ -48,8 +49,8 @@ public class LeaveFragment extends Fragment implements DatePickerDialog.OnDateSe
 
     private void initialization(View view){
         spSelectFaculty= (Spinner) view.findViewById(R.id.spSelectFaculty);
-        //btnStartDatePicker= (Button) view.findViewById(R.id.btnStartDatePicker);
-        //btnEndDatePicker= (Button) view.findViewById(R.id.btnEndDatePicker);
+        ivStartDatePicker= (ImageView) view.findViewById(R.id.ivStartDatePicker);
+        ivEndDatePicker= (ImageView) view.findViewById(R.id.ivEndDatePicker);
         session=new SessionManager(getContext());
         thisStudent = session.getCurrentUser();
 
@@ -154,7 +155,7 @@ public class LeaveFragment extends Fragment implements DatePickerDialog.OnDateSe
 
 
         //Date selection button event
-        btnStartDatePicker.setOnClickListener(new View.OnClickListener() {
+        ivStartDatePicker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 DialogFragment newFragment = new DatePickerFragment();
@@ -163,7 +164,7 @@ public class LeaveFragment extends Fragment implements DatePickerDialog.OnDateSe
 
             }
         });
-        btnEndDatePicker.setOnClickListener(new View.OnClickListener() {
+        ivEndDatePicker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 DialogFragment newFragment = new DatePickerFragment();

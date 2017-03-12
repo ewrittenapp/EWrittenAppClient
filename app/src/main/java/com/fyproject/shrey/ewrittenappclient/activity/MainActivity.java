@@ -67,7 +67,6 @@ public class MainActivity extends AppCompatActivity {
         FACULTY = getString(R.string.faculty);
 
 
-
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         final String studentNode=getString(R.string.studentNode);
 
@@ -79,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
 
             //Fetch user type
             fbRoot.child("/userType/"+user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+
                 String userType;
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -111,23 +111,25 @@ public class MainActivity extends AppCompatActivity {
 
                         fragTransaction = fragManager.beginTransaction();
                         fragTransaction.replace(R.id.container, studentMainFragment);
+                        fragTransaction.commit();
+
 
                     }
                     else if(userType.equals(FACULTY)) {
                         if (getSupportActionBar() != null) {
                             getSupportActionBar().setDisplayShowHomeEnabled(true);
                             getSupportActionBar().setTitle(R.string.faculty_home);
+
                         }
                         fragTransaction = fragManager.beginTransaction();
                         fragTransaction.replace(R.id.container, facultyMainFragment);
+                        fragTransaction.commit();
                     }
                     else if(userType==null) {  // no session value available
                         Log.d(TAG, "onAuthStateChanged: Unexpected:: no userType fetched");
                         finish();
                     }
 
-                    fragManager.popBackStack();
-                    fragTransaction.commit();
 
 
                 }
