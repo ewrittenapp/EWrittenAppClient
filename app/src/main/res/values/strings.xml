@@ -3,7 +3,6 @@
     <string name="student_home">student home</string>
     <string name="faculty_home">faculty home</string>
 
-
     <!--user types for session management    -->
     <string name="student">STUDENT</string>
     <string name="faculty">FACULTY</string>
@@ -24,8 +23,6 @@
 
     <!--firebase path-->
     <string name="studentNode">/studentNode</string>
-
-
     <!--LOGIN/AUTHENTICATION layout string resource-->
     <string name="action_sign_in_short">Register</string>
     <string name="email">Email</string>

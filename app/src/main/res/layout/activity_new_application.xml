@@ -16,7 +16,6 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary">
-
             <Spinner
                 android:id="@+id/spWAppType"
                 android:layout_width="match_parent"
@@ -24,13 +23,11 @@
                 android:backgroundTint="@color/white" />
         </android.support.v7.widget.Toolbar>
 
-
         <ScrollView
             android:scrollbars="vertical"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_below="@+id/toolbar">
-
             <FrameLayout
                 android:id="@+id/wAppTypeContainer"
                 android:layout_width="fill_parent"
@@ -39,8 +36,5 @@
         </ScrollView>
     </RelativeLayout>
 
-
     <!--<include layout="@layout/student_home" />-->
-
-
 </android.support.design.widget.CoordinatorLayout>

@@ -71,20 +71,21 @@
             android:orientation="vertical">
 
             <TextView
-                android:layout_marginTop="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
+                android:layout_marginTop="10dp"
                 android:text="Event Days"
                 android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
                 android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -101,8 +102,8 @@
 
                 <ImageView
                     android:id="@+id/ivStartDatePicker"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/logo_dimension"
+                    android:layout_height="@dimen/logo_dimension"
                     android:layout_margin="5dp"
                     android:src="@drawable/ic_calendar" />
 
@@ -122,8 +123,8 @@
 
                 <ImageView
                     android:id="@+id/ivEndDatePicker"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/logo_dimension"
+                    android:layout_height="@dimen/logo_dimension"
                     android:layout_margin="5dp"
                     android:src="@drawable/ic_calendar" />
             </LinearLayout>
@@ -144,20 +145,21 @@
             android:orientation="vertical">
 
             <TextView
-                android:layout_marginTop="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
+                android:layout_marginTop="10dp"
                 android:text="Event Timing"
                 android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
                 android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -174,8 +176,8 @@
 
                 <ImageView
                     android:id="@+id/ivStartTimePicker"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/logo_dimension"
+                    android:layout_height="@dimen/logo_dimension"
                     android:layout_margin="5dp"
                     android:src="@drawable/ic_clock" />
 
@@ -195,8 +197,8 @@
 
                 <ImageView
                     android:id="@+id/ivEndTimePicker"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/logo_dimension"
+                    android:layout_height="@dimen/logo_dimension"
                     android:layout_margin="5dp"
                     android:src="@drawable/ic_clock" />
             </LinearLayout>
@@ -204,7 +206,6 @@
         </LinearLayout>
 
     </android.support.v7.widget.CardView>
-
 
 
     <android.support.v7.widget.CardView
