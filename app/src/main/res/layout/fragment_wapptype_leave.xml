@@ -66,7 +66,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    android:text="25-1-2017" />
+                    android:text="select date" />
 
                 <ImageView
                     android:id="@+id/ivStartDatePicker"
@@ -97,7 +97,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    android:text="25-1-2017" />
+                    android:text="select date" />
 
                 <ImageView
                     android:id="@+id/ivEndDatePicker"
@@ -130,7 +130,7 @@
                 android:textStyle="bold" />
 
             <EditText
-                android:id="@+id/tvReason"
+                android:id="@+id/etReason"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
                 android:gravity="start"
@@ -154,12 +154,12 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:text="Upload File(Optional): "
-                android:textStyle="bold" />
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_margin="5dp"-->
+                <!--android:text="Upload File(Optional): "-->
+                <!--android:textStyle="bold" />-->
 
             <TextView
                 android:id="@+id/tvShowFileName"
@@ -168,14 +168,22 @@
                 android:layout_margin="5dp"
                 android:text="file not selected" />
 
-            <ImageView
-                android:id="@+id/ivFileUpload"
-                android:layout_width="@dimen/logo_dimension"
-                android:layout_height="@dimen/logo_dimension"
-                android:layout_margin="5dp"
-                android:src="@drawable/ic_upload" />
+            <Button
+                android:id="@+id/btnUpload"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="file"
+                android:layout_weight="2"/>
+
+
         </LinearLayout>
     </android.support.v7.widget.CardView>
+    <!--<ImageView-->
+    <!--android:id="@+id/ivFileUpload"-->
+    <!--android:layout_width="@dimen/logo_dimension"-->
+    <!--android:layout_height="@dimen/logo_dimension"-->
+    <!--android:layout_margin="5dp"-->
+    <!--android:src="@drawable/ic_upload" />-->
 
 
     <Button

@@ -52,8 +52,8 @@ public class rvStudentAdapter extends RecyclerView.Adapter<rvStudentAdapter.MyVi
         // get data from List<rvStudentRow> declared in this class
         rvStudentRow data=listData.get(position);
         holder.toName.setText(data.getToName());
-        holder.appType.setText(data.getAppType());
-        holder.date.setText(data.getSentDate());
+        holder.appType.setText(data.getType());
+        holder.date.setText(data.getDate_submitted());
         holder.status.setText(data.getStatus());  //Can check status here
     }
 

@@ -17,22 +17,35 @@ import android.widget.Toast;
 import com.fyproject.shrey.ewrittenappclient.R;
 import com.fyproject.shrey.ewrittenappclient.adapter.wAppTypeAdapter;
 import com.fyproject.shrey.ewrittenappclient.helper.DatePickerFragment;
+import com.fyproject.shrey.ewrittenappclient.helper.SessionManager;
+import com.fyproject.shrey.ewrittenappclient.model.StudentProfile;
 
 import java.util.List;
 
 public class NewApplication extends AppCompatActivity {
+
+    public static StudentProfile thisStudent;
+    public SessionManager sessionManager;
 
     FragmentManager fragManager = getSupportFragmentManager();
     FragmentTransaction fragTransaction;
 
     final String TAG="TAG";
 
+    private void InitVariables(){
+        sessionManager=new SessionManager(this);
+        thisStudent=sessionManager.getCurrentUser();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_application);
 
-        //Main written appType selection spinner
+        InitVariables();
+
+
+        //Main written type selection spinner
         Spinner spWAppType=(Spinner) findViewById(R.id.spWAppType);
         final wAppTypeAdapter appTypeAdapter=new wAppTypeAdapter(this);
 
@@ -44,7 +57,7 @@ public class NewApplication extends AppCompatActivity {
         spWAppType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-                //Select written applicaiton type format here..
+                //Select written application type format here..
                 String selectedItem= adapterView.getItemAtPosition(position).toString();
 
                 fragTransaction = fragManager.beginTransaction();
@@ -57,12 +70,8 @@ public class NewApplication extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-
             }
         });
-
-
-
 
     }
 

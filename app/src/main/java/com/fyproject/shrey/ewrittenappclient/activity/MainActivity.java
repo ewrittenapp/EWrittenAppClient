@@ -3,8 +3,6 @@ package com.fyproject.shrey.ewrittenappclient.activity;
 //This is created by SHREY
 
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.annotation.StringDef;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -97,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                     StudentProfile sp=dataSnapshot.getValue(StudentProfile.class);
+                                    sp.setUid(user.getUid());
                                     if(sp == null){
                                         Log.d(TAG, "onDataChange: student profile is NULL");
                                         return;
@@ -112,8 +111,6 @@ public class MainActivity extends AppCompatActivity {
                         fragTransaction = fragManager.beginTransaction();
                         fragTransaction.replace(R.id.container, studentMainFragment);
                         fragTransaction.commit();
-
-
                     }
                     else if(userType.equals(FACULTY)) {
                         if (getSupportActionBar() != null) {
@@ -129,8 +126,6 @@ public class MainActivity extends AppCompatActivity {
                         Log.d(TAG, "onAuthStateChanged: Unexpected:: no userType fetched");
                         finish();
                     }
-
-
 
                 }
                 @Override
@@ -161,6 +156,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "check connection Error: "+error);
             }
         });
+
 
     }
 

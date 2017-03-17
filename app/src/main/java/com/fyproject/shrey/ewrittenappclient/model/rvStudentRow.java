@@ -11,19 +11,18 @@ import com.google.firebase.database.IgnoreExtraProperties;
 public class rvStudentRow {
 
     public String toName;
-    public String appType;
-    public String sentDate;
+    public String type;
+    public String date_submitted;
     public String status;
-
-    @Exclude String wAppId;
+    @Exclude public String wAppId;
 
     public rvStudentRow(){
     }
 
     public  rvStudentRow(String toName,String appType,String date,String status){
         this.toName = toName;
-        this.appType = appType;
-        this.sentDate = date;
+        this.type = appType;
+        this.date_submitted = date;
         this.status= status;
     }
 
@@ -43,18 +42,18 @@ public class rvStudentRow {
         this.toName = toName;
     }
 
-    public String getAppType() {
-        return appType;
+    public String getType() {
+        return type;
     }
-    public void setAppType(String appType) {
-        this.appType = appType;
+    public void setType(String type) {
+        this.type = type;
     }
 
-    public String getSentDate() {
-        return sentDate;
+    public String getDate_submitted() {
+        return date_submitted;
     }
-    public void setSentDate(String sentDate) {
-        this.sentDate = sentDate;
+    public void setDate_submitted(String date_submitted) {
+        this.date_submitted = date_submitted;
     }
 
     public void setStatus(String status) {
@@ -66,7 +65,7 @@ public class rvStudentRow {
 
     @Override
     public String toString() {
-        String str="toName: "+toName+" | appType: "+appType+" | sentDate: "+ sentDate +" | status: "+status;
+        String str="toName: "+toName+" | type: "+ type +" | date_submitted: "+ date_submitted +" | status: "+status;
         return str;
     }
 }

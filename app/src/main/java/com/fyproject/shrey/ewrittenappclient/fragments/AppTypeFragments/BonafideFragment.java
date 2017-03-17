@@ -12,6 +12,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.fyproject.shrey.ewrittenappclient.R;
+import com.fyproject.shrey.ewrittenappclient.activity.NewApplication;
+import com.fyproject.shrey.ewrittenappclient.helper.SessionManager;
+import com.fyproject.shrey.ewrittenappclient.model.StudentProfile;
 
 import java.util.zip.Inflater;
 
@@ -50,7 +53,9 @@ public class BonafideFragment extends Fragment {
         tvShowFileName = (TextView) view.findViewById(R.id.tvShowFileName);
         ivFileUpload = (ImageView) view.findViewById(R.id.ivFileUpload);
         btnSubmit = (Button) view.findViewById(R.id.btnSubmit);
+
     }
+
 
     //call these method according to your requirements
     private void fileUploadChooser(){
