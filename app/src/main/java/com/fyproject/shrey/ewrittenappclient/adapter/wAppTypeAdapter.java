@@ -1,22 +1,12 @@
 package com.fyproject.shrey.ewrittenappclient.adapter;
 
-import android.app.Activity;
-
 import android.content.Context;
-import android.database.DataSetObserver;
 import android.support.v4.app.Fragment;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.SpinnerAdapter;
-
 import com.fyproject.shrey.ewrittenappclient.R;
 import com.fyproject.shrey.ewrittenappclient.fragments.AppTypeFragments.*;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static android.R.attr.id;
 
 /**
  * Created by shrey on 07/03/17.

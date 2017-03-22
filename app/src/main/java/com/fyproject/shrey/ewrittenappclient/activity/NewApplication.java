@@ -34,7 +34,7 @@ public class NewApplication extends AppCompatActivity {
 
     private void InitVariables(){
         sessionManager=new SessionManager(this);
-        thisStudent=sessionManager.getCurrentUser();
+        thisStudent= (StudentProfile) sessionManager.getCurrentUser();
     }
 
     @Override
@@ -43,7 +43,6 @@ public class NewApplication extends AppCompatActivity {
         setContentView(R.layout.activity_new_application);
 
         InitVariables();
-
 
         //Main written type selection spinner
         Spinner spWAppType=(Spinner) findViewById(R.id.spWAppType);

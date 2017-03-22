@@ -45,6 +45,7 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
 
         cal= Calendar.getInstance();
         cal.set(year,month,day,0,0,0); //calender class month starts with 0
+        cal.clear(Calendar.MILLISECOND);
 
         Log.d("TAG", "onDateSet: "+cal.getTime());
         //Now, return date info to calling activity

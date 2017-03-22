@@ -1,5 +1,8 @@
 package com.fyproject.shrey.ewrittenappclient.model;
 
+import android.content.Context;
+
+import com.fyproject.shrey.ewrittenappclient.R;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
 
@@ -33,13 +36,13 @@ public class WAppLeave extends WAppBase {
     public WAppLeave(){
     }
 
-    public WAppLeave(StudentProfile sp){
+    public WAppLeave(StudentProfile sp, Context x){
         fromUid=sp.getUid();
         fromName=sp.fname+" "+sp.lname;
         enroll=sp.enroll;
         classInfo=sp.branch+" semester "+sp.sem+" class: "+sp.div;
 
-        type="Leave Application";
+        type=x.getString(R.string.leave);
         date_submitted= DateFormat.getDateInstance().format(new Date());
         status="pending";
     }

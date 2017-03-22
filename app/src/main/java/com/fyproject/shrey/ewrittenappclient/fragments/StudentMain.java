@@ -12,14 +12,20 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.fyproject.shrey.ewrittenappclient.R;
 import com.fyproject.shrey.ewrittenappclient.activity.NewApplication;
+import com.fyproject.shrey.ewrittenappclient.activity.ViewApplicaion;
 import com.fyproject.shrey.ewrittenappclient.adapter.rvStudentAdapter;
 import com.fyproject.shrey.ewrittenappclient.helper.SessionManager;
 import com.fyproject.shrey.ewrittenappclient.model.StudentProfile;
+import com.fyproject.shrey.ewrittenappclient.model.WAppBase;
+import com.fyproject.shrey.ewrittenappclient.model.WAppBonafide;
+import com.fyproject.shrey.ewrittenappclient.model.WAppLeave;
 import com.fyproject.shrey.ewrittenappclient.model.rvStudentRow;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -46,8 +52,9 @@ public class StudentMain extends Fragment {
     private RecyclerView rv_wAppList;
     private rvStudentAdapter rv_Adapter;
     private RecyclerView.LayoutManager rvLayoutManager;
-    private List<rvStudentRow> rv_dataset = new ArrayList<>();
+    private List<WAppBase> rv_dataset = new ArrayList<>();
     private String TAG="TAG";
+    private String no_support="written application type not supported";
 
     private void InitVariables(View v){
         auth= FirebaseAuth.getInstance();
@@ -67,12 +74,18 @@ public class StudentMain extends Fragment {
         rv_wAppList.addItemDecoration(itemDecoration);
 
         sessionManager=new SessionManager(getContext());
-        thisStudent=sessionManager.getCurrentUser();
+        thisStudent= (StudentProfile) sessionManager.getCurrentUser();
     }
 
     public StudentMain() {
         // Required empty public constructor
     }
+//    <string name="leave">LEAVE APPLICATION</string>
+//    <string name="bonafide">BONAFIDE CERTIFICATE REQUEST</string>
+//    <string name="custom">CUSTOM APPLICATION</string>
+//    <string name="complaint">COMPLAINT APPLICATION</string>
+//    <string name="infrastructure">INFRASTRUCTURE APPLICATION</string>
+//    <string name="organize_event">ORGANIZE EVENT APPLICATION</string>
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -80,23 +93,63 @@ public class StudentMain extends Fragment {
         View view=inflater.inflate(R.layout.fragment_student_main, container, false);
         InitVariables(view);
         Log.d(TAG, "onCreateView: StudentMain Frag ");
-        dbroot.child("applicationsNode").child(thisStudent.getUid())
+
+        //Add data to rv
+        ChildEventListener childEventListener = dbroot.child("applicationsNode").child(thisStudent.getUid())
                 .addChildEventListener(new ChildEventListener() {
+
                     @Override
                     public void onChildAdded(DataSnapshot ds, String s) {
-                        rvStudentRow rowData=ds.getValue(rvStudentRow.class);
+                        if(ds.getValue() == null) return;
+
+                        WAppBase rowData;
+                        String wAppType = ds.child("type").getValue(String.class);
+                        switch (wAppType){ //fetch appropriate wApp and store it to rowData
+                            case "LEAVE APPLICATION":
+                                rowData = ds.getValue(WAppLeave.class);
+                                Log.d(TAG, "LEAVE APPL : Added");
+                                break;
+
+                            case "BONAFIDE CERTIFICATE":
+                                rowData = ds.getValue(WAppBonafide.class);
+                                break;
+
+                            default:
+                                rowData = ds.getValue(WAppBase.class);
+                                Toast.makeText(getContext(),no_support, Toast.LENGTH_SHORT).show();
+                                Log.d(TAG, "listening for filling rv_row: "+no_support);
+                        }
                         rowData.setwAppId(ds.getKey());
-                        rv_dataset.add(0,rowData);
+
+                        rv_dataset.add(0, rowData);
+                        //rv_Adapter.notifyDataSetChanged();
+                        rv_Adapter.notifyItemInserted(0);
+                    }
+
+                    @Override
+                    public void onChildChanged(DataSnapshot ds, String s) {
+                        if(ds.getValue() == null) return;
+                        WAppBase rowData = ds.getValue(WAppLeave.class);
+                        rowData.setwAppId(ds.getKey());
+
+                        String k = ds.getKey();
+                        int i;
+                        for (i = 0; i < rv_dataset.size(); i++) {
+                            if(rv_dataset.get(i).wAppId.equals(k)) break;
+                        }//i contains index of key
+                        rv_dataset.set(i,rowData);
+                        rv_Adapter.notifyItemChanged(i);
+
+                        Log.d(TAG, " -- > "+rv_dataset.get(i));
+
+                    }
+
+                    @Override
+                    public void onChildRemoved(DataSnapshot ds) {
+                        WAppBase rowData = ds.getValue(WAppLeave.class);
+                        rowData.setwAppId(ds.getKey());
+                        rv_dataset.remove(rowData);
                         rv_Adapter.notifyDataSetChanged();
-                    }
-
-                    @Override
-                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-                    }
-
-                    @Override
-                    public void onChildRemoved(DataSnapshot dataSnapshot) {
 
                     }
 
@@ -111,6 +164,21 @@ public class StudentMain extends Fragment {
                     }
 
                 });
+
+        rv_Adapter.setOnItemClickListener(new rvStudentAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View itemView, WAppBase rowData, int position) {
+                //Toast.makeText(getContext(), "pos: "+position, Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "onItemClick: "+position+") "+rowData);
+
+                Intent info = new Intent(getActivity(), ViewApplicaion.class);
+                info.putExtra("WAPP_INFO", rowData);
+//                info.putExtra("FROM_UID",rowData.fromUid);
+//                info.putExtra("APP_ID",rowData.getwAppId());
+//                info.putExtra("APP_TYPE",rowData.getType());
+                startActivity(info);
+            }
+        });
 /*
         //get previous applications data
         dbroot.child("applicationsNode").child(thisStudent.getUid())

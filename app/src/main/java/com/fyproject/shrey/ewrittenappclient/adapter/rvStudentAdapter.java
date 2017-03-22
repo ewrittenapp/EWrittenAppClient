@@ -1,5 +1,6 @@
 package com.fyproject.shrey.ewrittenappclient.adapter;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.fyproject.shrey.ewrittenappclient.R;
+import com.fyproject.shrey.ewrittenappclient.model.WAppBase;
 import com.fyproject.shrey.ewrittenappclient.model.rvStudentRow;
 
 import java.util.List;
@@ -17,25 +19,52 @@ import java.util.List;
  */
 
 public class rvStudentAdapter extends RecyclerView.Adapter<rvStudentAdapter.MyViewHolder> {
+//WAppBase
+    private List<WAppBase> listData;
+    private OnItemClickListener listener;
 
-    private List<rvStudentRow> listData;
+    /***** Creating OnItemClickListener *****/
+
+    // Define the listener interface
+    public interface OnItemClickListener {
+        void onItemClick(View itemView,WAppBase rowData, int position);
+    }
+    // Define the method that allows the parent activity or fragment to define the listener
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
+    /***** ***************************** *****/
 
     // Provide a reference to the views(in rv_row.xml) for each data item
     public class MyViewHolder extends RecyclerView.ViewHolder{
 
         public TextView toName,appType,date,status;
 
-        public MyViewHolder(View v){
-            super(v);
-            toName= (TextView) v.findViewById(R.id.tvToName);
-            appType=(TextView) v.findViewById(R.id.tvAppType);
-            date=(TextView) v.findViewById(R.id.tvDate);
-            status=(TextView) v.findViewById(R.id.tvStatus);
+        public MyViewHolder(final View itemView){
+            super(itemView);
+            toName= (TextView) itemView.findViewById(R.id.tvToName);
+            appType=(TextView) itemView.findViewById(R.id.tvAppType);
+            date=(TextView) itemView.findViewById(R.id.tvDate);
+            status=(TextView) itemView.findViewById(R.id.tvStatus);
+
+            // Setup the click listener
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Triggers click upwards to the adapter on click
+                    if (listener != null) {
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            listener.onItemClick(itemView,listData.get(position), position);
+                        }
+                    }
+                }
+            });
         }
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public rvStudentAdapter(List<rvStudentRow> listing){
+    public rvStudentAdapter(List<WAppBase> listing){
         this.listData=listing;
     }
 
@@ -50,12 +79,18 @@ public class rvStudentAdapter extends RecyclerView.Adapter<rvStudentAdapter.MyVi
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         // get data from List<rvStudentRow> declared in this class
-        rvStudentRow data=listData.get(position);
+        WAppBase data=listData.get(position);
         holder.toName.setText(data.getToName());
         holder.appType.setText(data.getType());
         holder.date.setText(data.getDate_submitted());
         holder.status.setText(data.getStatus());  //Can check status here
+
+
     }
+
+//    private Context getContext() {
+//        return ;
+//    }
 
     @Override
     public int getItemCount() {

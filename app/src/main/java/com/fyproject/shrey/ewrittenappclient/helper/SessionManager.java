@@ -2,7 +2,10 @@ package com.fyproject.shrey.ewrittenappclient.helper;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
+import com.fyproject.shrey.ewrittenappclient.R;
+import com.fyproject.shrey.ewrittenappclient.model.FacultyProfile;
 import com.fyproject.shrey.ewrittenappclient.model.StudentProfile;
 
 /**
@@ -25,6 +28,7 @@ public class SessionManager {
         editor.commit();
     }
 
+    //save student data
     public void setCurrentUser(StudentProfile user,String userType){
         editor.putString(KEY_USER_TYPE,userType);
 
@@ -38,26 +42,78 @@ public class SessionManager {
         editor.putString("branch",user.branch);
         editor.putString("div",user.div);
         editor.putString("sem",user.sem);
-
         isCurrentUserSet=true;
         editor.apply();
     }
 
-    public StudentProfile getCurrentUser(){
-        StudentProfile student = new StudentProfile();
+    //save faculty data
+    public void setCurrentUser(FacultyProfile user, String userType){
+        editor.putString(KEY_USER_TYPE,userType);
 
-        student.fname=pref.getString("fname","NULL");
-        student.lname=pref.getString("lname","NULL");
-        student.mname=pref.getString("fname","NULL");
-        student.email=pref.getString("email","NULL");
-        student.enroll=pref.getString("enroll","NULL");
-        student.mobile=pref.getString("mobile","NULL");
-        student.branch=pref.getString("branch","NULL");
-        student.div=pref.getString("div","NULL");
-        student.sem=pref.getString("sem","NULL");
-        student.Uid=pref.getString("Uid","NULL");
+        editor.putString("Uid",user.getUid());
+        editor.putString("name",user.name);
+        editor.putString("email",user.email);
+        editor.putString("mobile",user.mobile);
+        isCurrentUserSet=true;
+        editor.apply();
+    }
 
-        return student;
+    //get student data
+    public Object getCurrentUser(){
+        String userType=getUserType();
+
+        if(userType.equals(context.getString(R.string.student))) {
+            StudentProfile student = new StudentProfile();
+            student.fname = pref.getString("fname", "NULL");
+            student.lname = pref.getString("lname", "NULL");
+            student.mname = pref.getString("fname", "NULL");
+            student.email = pref.getString("email", "NULL");
+            student.enroll = pref.getString("enroll", "NULL");
+            student.mobile = pref.getString("mobile", "NULL");
+            student.branch = pref.getString("branch", "NULL");
+            student.div = pref.getString("div", "NULL");
+            student.sem = pref.getString("sem", "NULL");
+            student.Uid = pref.getString("Uid", "NULL");
+            return student;
+        } else if (userType.equals(context.getString(R.string.faculty))) {
+            FacultyProfile fp = new FacultyProfile();
+            fp.branch = pref.getString("branch", "NULL");
+            fp.name = pref.getString("name", "NULL");
+            fp.email = pref.getString("email", "NULL");
+            fp.mobile = pref.getString("mobile", "NULL");
+            fp.Uid = pref.getString("Uid", "NULL");
+            return fp;
+        }
+
+        Log.d("TAG", "SessionManager.getCurrentUser: UserType not found");
+        return null;//no userType found
+    }
+
+
+
+    public void clearCurrentUser(){
+        String userType=getUserType();
+
+        if(userType.equals(context.getString(R.string.student))){
+            editor.remove(KEY_USER_TYPE);
+            editor.remove("fname");
+            editor.remove("mname");
+            editor.remove("lname");
+            editor.remove("email");
+            editor.remove("enroll");
+            editor.remove("mobile");
+            editor.remove("branch");
+            editor.remove("div");
+            editor.remove("sem");
+            editor.remove("Uid");
+        }else if(userType.equals(context.getString(R.string.faculty))){
+            editor.remove(KEY_USER_TYPE);
+            editor.remove("name");
+            editor.remove("email");
+            editor.remove("enroll");
+            editor.remove("mobile");
+        }
+        editor.commit();
     }
 
 

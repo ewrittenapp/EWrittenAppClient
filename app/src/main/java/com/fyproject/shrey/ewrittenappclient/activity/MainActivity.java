@@ -17,6 +17,7 @@ import com.fyproject.shrey.ewrittenappclient.R;
 import com.fyproject.shrey.ewrittenappclient.fragments.FacultyMain;
 import com.fyproject.shrey.ewrittenappclient.fragments.StudentMain;
 import com.fyproject.shrey.ewrittenappclient.helper.SessionManager;
+import com.fyproject.shrey.ewrittenappclient.model.FacultyProfile;
 import com.fyproject.shrey.ewrittenappclient.model.StudentProfile;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -118,6 +119,24 @@ public class MainActivity extends AppCompatActivity {
                             getSupportActionBar().setTitle(R.string.faculty_home);
 
                         }
+                        //get details
+                        fbRoot.child(studentNode).child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener(){
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                FacultyProfile fp=dataSnapshot.getValue(FacultyProfile.class);
+                                fp.setUid(user.getUid());
+                                if(fp == null){
+                                    Log.d(TAG, "onDataChange: student profile is NULL");
+                                    return;
+                                }
+                                session.setCurrentUser(fp,FACULTY);
+                            }
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Log.d(TAG, "Fetching profile: onCancelled: "+databaseError);
+                            }
+                        });
+
                         fragTransaction = fragManager.beginTransaction();
                         fragTransaction.replace(R.id.container, facultyMainFragment);
                         fragTransaction.commit();
@@ -188,7 +207,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (id == R.id.sign_out) {
             if(isFirebaseConnected){
-              //  session.ClearUserType();
+                session.clearCurrentUser();
                 auth.signOut();
                 Log.d(TAG, "user signed out");
                 startActivity(new Intent(MainActivity.this, LoginActivity.class));

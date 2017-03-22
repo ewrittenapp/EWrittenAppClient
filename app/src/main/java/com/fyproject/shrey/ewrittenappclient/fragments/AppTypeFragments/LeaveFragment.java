@@ -74,7 +74,7 @@ public class LeaveFragment extends Fragment{
     Calendar endDate;
     Converter converter=new Converter();
     StudentProfile thisStudent = NewApplication.thisStudent;
-    private WAppLeave leaveApp=new WAppLeave(thisStudent); //leave app initialized with student data
+    private WAppLeave leaveApp;
     final String branch=converter.convertBranch(thisStudent.branch);
     final String sem=converter.convertSem(thisStudent.sem);
     final String Class=converter.convertClass(thisStudent.div);
@@ -94,6 +94,7 @@ public class LeaveFragment extends Fragment{
         btnSubmit= (Button) view.findViewById(R.id.btnSubmit);
         fbRoot= FirebaseDatabase.getInstance().getReference();
 
+        leaveApp=new WAppLeave(thisStudent,getActivity());//leave app initialized with student data
         fm = getActivity().getSupportFragmentManager();
         startDateFragment.setTargetFragment(this,STARTDATE_FRAG_REQUEST_CODE);
         endDateFragment.setTargetFragment(this,ENDDATE_FRAG_REQUEST_CODE);
@@ -225,6 +226,7 @@ public class LeaveFragment extends Fragment{
                 tvShowEndDate.setText(data.getStringExtra("tvDateData"));
                 endDate = (Calendar) endDateFragment.getDate();
                 leaveApp.endDate = DateFormat.getDateInstance().format(endDate.getTime());
+                Log.d(TAG, "onActivityResult: endDate: "+endDate.getTime());
                 break;
 
             case FILE_SELECT_CODE:
@@ -253,7 +255,7 @@ public class LeaveFragment extends Fragment{
             Snackbar.make(v,"Please select dates",Snackbar.LENGTH_SHORT).show();
             return false;
         }
-        else if(startDate.after(endDate)){ // if start date is after end date
+        else if(startDate.after(endDate)){ // if start date is after end date startDate.compareTo(endDate)>0
             Log.d(TAG, "validateInputData: startDate is AFTER endDate");
             Snackbar.make(v,"start Date is AFTER end Date!",Snackbar.LENGTH_SHORT).show();
             return false;

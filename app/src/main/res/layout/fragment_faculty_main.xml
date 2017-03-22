@@ -1,14 +1,22 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.fyproject.shrey.ewrittenappclient.fragments.FacultyMain">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
+        android:id="@+id/tvNotifyNothingLeft"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Teacher fragment"
-        android:textSize="40dp"/>
+        android:layout_height="wrap_content"
+        android:text="No applications pending to review"
+        android:textSize="25dp"
+        android:gravity="center"
+        android:visibility="gone"/>
 
-</FrameLayout>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_wAppList"
+        android:scrollbars="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</RelativeLayout>

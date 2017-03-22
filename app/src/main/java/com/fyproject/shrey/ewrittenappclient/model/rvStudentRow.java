@@ -3,15 +3,20 @@ package com.fyproject.shrey.ewrittenappclient.model;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
 
+import java.io.Serializable;
+
 /**
  * Created by shrey on 06/03/17.
  */
 
 @IgnoreExtraProperties
-public class rvStudentRow {
+public class rvStudentRow implements Serializable{ // this class properties is same as wAppBase pojo
 
-    public String toName;
     public String type;
+    public String toUid;
+    public String toName;
+    public String fromUid;
+    public String fromName;
     public String date_submitted;
     public String status;
     @Exclude public String wAppId;
