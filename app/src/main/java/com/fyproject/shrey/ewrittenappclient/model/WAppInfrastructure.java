@@ -8,27 +8,29 @@ import java.text.DateFormat;
 import java.util.Date;
 
 /**
- * Created by shrey on 21/03/17.
+ * Created by shrey on 22/03/17.
  */
 
-public class WAppBonafide extends WAppBase {
-
+public class WAppInfrastructure extends WAppBase {
     public String enroll;
     public String classInfo;
+
+    public String issueType;
+    public String location;
     public String message;
     public String response="null";
     public String attachedFile="null";
 
-    public WAppBonafide(){
+    public WAppInfrastructure(){
     }
 
-    public WAppBonafide(StudentProfile sp, Context x){
+    public WAppInfrastructure(StudentProfile sp, Context x){
         fromUid=sp.getUid();
         fromName=sp.fname+" "+sp.lname;
         enroll=sp.enroll;
         classInfo=sp.branch+" semester "+sp.sem+" class: "+sp.div;
 
-        type=x.getString(R.string.bonafide);
+        type=x.getString(R.string.infrastructure);
         date_submitted= DateFormat.getDateInstance().format(new Date());
         status="pending";
     }

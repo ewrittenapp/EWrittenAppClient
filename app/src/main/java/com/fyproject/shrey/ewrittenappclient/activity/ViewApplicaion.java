@@ -24,9 +24,9 @@ public class ViewApplicaion extends AppCompatActivity {
     public static StudentProfile thisStudent;
     public static FacultyProfile thisFaculty;
     //public static WAppBase WAPP_DATA;
+    public static WAppBase info;
 
     public SessionManager sessionManager;
-    public static WAppBase info;
 
     private wAppViewAdapter appViewAdapter;
     FragmentManager fragManager = getSupportFragmentManager();
