@@ -46,7 +46,7 @@ public class ViewApplicaion extends AppCompatActivity {
         info= (WAppBase) getIntent().getSerializableExtra("WAPP_INFO");
         Log.d(TAG, "ViewApp intent Received: "+info);
 
-        appViewAdapter=new wAppViewAdapter(this);
+
         toolbar= (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
     }
@@ -57,11 +57,14 @@ public class ViewApplicaion extends AppCompatActivity {
         setContentView(R.layout.activity_view_applicaion);
         InitVariables();
 
+        final wAppViewAdapter appViewAdapter=new wAppViewAdapter(this);
+
         //check if application view fragment is present
         if ( appViewAdapter.getAppTypeFragment(info.getType()) != null ){
 
             if (getSupportActionBar()!=null)
                 getSupportActionBar().setTitle(info.getType());
+            Log.d(TAG, "Choosing wAppView   : "+info.getType());
 
             fragTransaction = fragManager.beginTransaction();
             fragTransaction.replace(R.id.wAppViewContainer, appViewAdapter.getAppTypeFragment(info.getType()));
@@ -69,7 +72,19 @@ public class ViewApplicaion extends AppCompatActivity {
             fragTransaction.commit();
         }
 
-
-
     }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(TAG, "ViewApplicaion onStop: ");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "ViewApplicaion onDestroy: ");
+    }
+
+
 }

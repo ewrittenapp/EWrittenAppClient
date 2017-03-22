@@ -25,6 +25,7 @@ import com.fyproject.shrey.ewrittenappclient.helper.SessionManager;
 import com.fyproject.shrey.ewrittenappclient.model.StudentProfile;
 import com.fyproject.shrey.ewrittenappclient.model.WAppBase;
 import com.fyproject.shrey.ewrittenappclient.model.WAppBonafide;
+import com.fyproject.shrey.ewrittenappclient.model.WAppCustom;
 import com.fyproject.shrey.ewrittenappclient.model.WAppLeave;
 import com.fyproject.shrey.ewrittenappclient.model.rvStudentRow;
 import com.google.firebase.auth.FirebaseAuth;
@@ -104,14 +105,19 @@ public class StudentMain extends Fragment {
 
                         WAppBase rowData;
                         String wAppType = ds.child("type").getValue(String.class);
+                        Log.d(TAG, ">>>> App Type Fetch: "+wAppType);
                         switch (wAppType){ //fetch appropriate wApp and store it to rowData
                             case "LEAVE APPLICATION":
                                 rowData = ds.getValue(WAppLeave.class);
                                 Log.d(TAG, "LEAVE APPL : Added");
                                 break;
 
-                            case "BONAFIDE CERTIFICATE":
+                            case "BONAFIDE CERTIFICATE REQUEST":
                                 rowData = ds.getValue(WAppBonafide.class);
+                                break;
+
+                            case "CUSTOM APPLICATION":
+                                rowData = ds.getValue(WAppCustom.class);
                                 break;
 
                             default:
@@ -128,8 +134,28 @@ public class StudentMain extends Fragment {
 
                     @Override
                     public void onChildChanged(DataSnapshot ds, String s) {
-                        if(ds.getValue() == null) return;
-                        WAppBase rowData = ds.getValue(WAppLeave.class);
+           /*             if(ds.getValue() == null) return;
+                        WAppBase rowData;
+                        String wAppType = ds.child("type").getValue(String.class);
+                        switch (wAppType){ //fetch appropriate wApp and store it to rowData
+                            case "LEAVE APPLICATION":
+                                rowData = ds.getValue(WAppLeave.class);
+                                Log.d(TAG, "LEAVE APPL : Added");
+                                break;
+
+                            case "BONAFIDE CERTIFICATE REQUEST":
+                                rowData = ds.getValue(WAppBonafide.class);
+                                break;
+
+                            case "CUSTOM APPLICATION":
+                                rowData = ds.getValue(WAppCustom.class);
+                                break;
+
+                            default:
+                                rowData = ds.getValue(WAppBase.class);
+                                Toast.makeText(getContext(),no_support, Toast.LENGTH_SHORT).show();
+                                Log.d(TAG, "listening for filling rv_row: "+no_support);
+                        }
                         rowData.setwAppId(ds.getKey());
 
                         String k = ds.getKey();
@@ -141,15 +167,15 @@ public class StudentMain extends Fragment {
                         rv_Adapter.notifyItemChanged(i);
 
                         Log.d(TAG, " -- > "+rv_dataset.get(i));
-
+            */
                     }
 
                     @Override
                     public void onChildRemoved(DataSnapshot ds) {
-                        WAppBase rowData = ds.getValue(WAppLeave.class);
-                        rowData.setwAppId(ds.getKey());
-                        rv_dataset.remove(rowData);
-                        rv_Adapter.notifyDataSetChanged();
+//                        WAppBase rowData = ds.getValue(WAppLeave.class);
+//                        rowData.setwAppId(ds.getKey());
+//                        rv_dataset.remove(rowData);
+//                        rv_Adapter.notifyDataSetChanged();
 
                     }
 
@@ -160,7 +186,7 @@ public class StudentMain extends Fragment {
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
-
+                        Log.d(TAG, "onCancelled: "+databaseError);
                     }
 
                 });

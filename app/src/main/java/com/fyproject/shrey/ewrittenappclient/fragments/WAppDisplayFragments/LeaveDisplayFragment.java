@@ -43,7 +43,8 @@ public class LeaveDisplayFragment extends Fragment {
     private Button btnReject; //Faculty
 
     private DatabaseReference fbRoot;
-    private WAppLeave leaveApp =(WAppLeave) ViewApplicaion.info;
+
+    private WAppLeave leaveApp;
 
     public String STUDENT;
     public String FACULTY;
@@ -63,6 +64,7 @@ public class LeaveDisplayFragment extends Fragment {
         btnReject= (Button) v.findViewById(R.id.btnReject);
         STUDENT = getString(R.string.student);
         FACULTY = getString(R.string.faculty);
+        leaveApp =(WAppLeave) ViewApplicaion.info;
 
         FirebaseDatabase.getInstance().getReference();
 
@@ -95,6 +97,7 @@ public class LeaveDisplayFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_display_leave, container, false);
         initialization(view);
+
 
         if( ViewApplicaion.USERTYPE.equals(STUDENT)) {
             //STUDENT Display wApp code
@@ -170,6 +173,27 @@ public class LeaveDisplayFragment extends Fragment {
         });
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG, "LeaveDisplayFragment onStop: ");
+    }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        Log.d(TAG, "LeaveDisplayFragment onDetach: ");
+    }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Log.d(TAG, " LeaveDisplayFragment onDestroyView: ");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "LeaveDisplayFragment onDestroy: ");
+    }
 }

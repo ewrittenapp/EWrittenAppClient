@@ -7,7 +7,12 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.fyproject.shrey.ewrittenappclient.R;
+import com.fyproject.shrey.ewrittenappclient.fragments.WAppDisplayFragments.BonafideDisplayFragment;
+import com.fyproject.shrey.ewrittenappclient.fragments.WAppDisplayFragments.ComplaintDisplayFragment;
+import com.fyproject.shrey.ewrittenappclient.fragments.WAppDisplayFragments.CustomDisplayFragment;
+import com.fyproject.shrey.ewrittenappclient.fragments.WAppDisplayFragments.InfrastructureDisplayFragment;
 import com.fyproject.shrey.ewrittenappclient.fragments.WAppDisplayFragments.LeaveDisplayFragment;
+import com.fyproject.shrey.ewrittenappclient.fragments.WAppDisplayFragments.OrganizeEventDisplayFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +31,11 @@ public class wAppViewAdapter {
         context=x;
 
         addFragment(x.getString(R.string.leave),new LeaveDisplayFragment());
+        addFragment(x.getString(R.string.bonafide),new BonafideDisplayFragment());
+        addFragment(x.getString(R.string.complaint),new ComplaintDisplayFragment());
+        addFragment(x.getString(R.string.infrastructure),new InfrastructureDisplayFragment());
+        addFragment(x.getString(R.string.organize_event),new OrganizeEventDisplayFragment());
+        addFragment(x.getString(R.string.custom),new CustomDisplayFragment());
 
     }
 
