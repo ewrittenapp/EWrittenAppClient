@@ -37,6 +37,11 @@ public class ComplaintFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_wapptype_complaint, container, false);
             initialization(view);
+
+
+
+
+
         return view;
     }
 

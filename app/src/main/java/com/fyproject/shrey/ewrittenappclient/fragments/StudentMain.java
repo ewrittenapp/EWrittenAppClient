@@ -74,8 +74,9 @@ public class StudentMain extends Fragment {
         RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL);
         rv_wAppList.addItemDecoration(itemDecoration);
 
-        sessionManager=new SessionManager(getContext());
+        sessionManager=new SessionManager(getActivity());
         thisStudent= (StudentProfile) sessionManager.getCurrentUser();
+        Log.d(TAG, "InitVariables: thisStudent id:"+thisStudent.Uid);
     }
 
     public StudentMain() {

@@ -67,13 +67,32 @@ public class MainActivity extends AppCompatActivity {
 
 
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        final String studentNode=getString(R.string.studentNode);
+        final String studentNode="studentNode";
 
         //** CHECK USER STATUS **//
         if (user != null) { // User is signed in
 
             final StudentMain studentMainFragment=new StudentMain();
             final FacultyMain facultyMainFragment=new FacultyMain();
+
+            fbRoot.child("/studentNode/"+user.getUid()).addListenerForSingleValueEvent(new ValueEventListener(){
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    StudentProfile sp=dataSnapshot.getValue(StudentProfile.class);
+                    if(sp == null){
+                        Log.d(TAG, "onDataChange: student profile is NULL");
+                        return;
+                    }
+                    sp.setUid(user.getUid());
+                    Log.d(TAG, "StudentProfile: "+sp.fname);
+                    session.setCurrentUser(sp,"STUDENT");
+
+                }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Log.d(TAG, "Fetching profile: onCancelled: "+databaseError);
+                }
+            });
 
             //Fetch user type
             fbRoot.child("/userType/"+user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -92,22 +111,7 @@ public class MainActivity extends AppCompatActivity {
                             getSupportActionBar().setTitle(R.string.student_home);
                         }
                         //get details
-                        fbRoot.child(studentNode).child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener(){
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    StudentProfile sp=dataSnapshot.getValue(StudentProfile.class);
-                                    sp.setUid(user.getUid());
-                                    if(sp == null){
-                                        Log.d(TAG, "onDataChange: student profile is NULL");
-                                        return;
-                                    }
-                                    session.setCurrentUser(sp,STUDENT);
-                                }
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-                                    Log.d(TAG, "Fetching profile: onCancelled: "+databaseError);
-                                }
-                            });
+
 
                         fragTransaction = fragManager.beginTransaction();
                         fragTransaction.replace(R.id.container, studentMainFragment);
@@ -207,7 +211,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (id == R.id.sign_out) {
             if(isFirebaseConnected){
-                session.clearCurrentUser();
+        //        session.clearCurrentUser();
                 auth.signOut();
                 Log.d(TAG, "user signed out");
                 startActivity(new Intent(MainActivity.this, LoginActivity.class));

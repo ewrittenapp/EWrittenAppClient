@@ -7,15 +7,16 @@ import android.util.Log;
 import com.fyproject.shrey.ewrittenappclient.R;
 import com.fyproject.shrey.ewrittenappclient.model.FacultyProfile;
 import com.fyproject.shrey.ewrittenappclient.model.StudentProfile;
+import com.fyproject.shrey.ewrittenappclient.model.UserProfile;
 
 /**
  * Created by shrey on 02/03/17.
  */
 
 public class SessionManager {
-    SharedPreferences pref;
-    Context context;
-    SharedPreferences.Editor editor;
+    private SharedPreferences pref;
+    private Context context;
+    private SharedPreferences.Editor editor;
 
     private static final String PREF_FILE = "com.fyproject.shrey.ewrittenapp.USER_INFO";
     private static final String KEY_USER_TYPE="userType";
@@ -30,6 +31,9 @@ public class SessionManager {
 
     //save student data
     public void setCurrentUser(StudentProfile user,String userType){
+        editor=pref.edit();
+
+        Log.d("TAG", "setCurrentUser: CODE EXECUTED");
         editor.putString(KEY_USER_TYPE,userType);
 
         editor.putString("Uid",user.getUid());
@@ -43,7 +47,8 @@ public class SessionManager {
         editor.putString("div",user.div);
         editor.putString("sem",user.sem);
         isCurrentUserSet=true;
-        editor.apply();
+        Log.d("TAG", "setCurrentUser: "+pref.getString(KEY_USER_TYPE,"no userType"));
+        editor.commit();
     }
 
     //save faculty data
@@ -55,11 +60,11 @@ public class SessionManager {
         editor.putString("email",user.email);
         editor.putString("mobile",user.mobile);
         isCurrentUserSet=true;
-        editor.apply();
+        editor.commit();
     }
 
     //get student data
-    public Object getCurrentUser(){
+    public UserProfile getCurrentUser(){
         String userType=getUserType();
 
         if(userType.equals(context.getString(R.string.student))) {
@@ -74,7 +79,7 @@ public class SessionManager {
             student.div = pref.getString("div", "NULL");
             student.sem = pref.getString("sem", "NULL");
             student.Uid = pref.getString("Uid", "NULL");
-            return student;
+            return student ;
         } else if (userType.equals(context.getString(R.string.faculty))) {
             FacultyProfile fp = new FacultyProfile();
             fp.branch = pref.getString("branch", "NULL");

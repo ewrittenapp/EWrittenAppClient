@@ -131,6 +131,7 @@ public class LeaveDisplayFragment extends Fragment {
             //FACULTY Display wApp code
 
 
+
             btnAccept.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
