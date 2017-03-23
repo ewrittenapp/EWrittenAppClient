@@ -94,6 +94,27 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
+            fbRoot.child("/facultyNode/"+user.getUid()).addListenerForSingleValueEvent(new ValueEventListener(){
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    FacultyProfile fp=dataSnapshot.getValue(FacultyProfile.class);
+                    if(fp == null){
+                        Log.d(TAG, "onDataChange: student profile is NULL");
+                        return;
+                    }
+                    fp.setUid(user.getUid());
+                    Log.d(TAG, "StudentProfile: "+fp.name);
+                    session.setCurrentUser(fp,"FACULTY");
+
+                }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Log.d(TAG, "Fetching profile: onCancelled: "+databaseError);
+                }
+            });
+
+
+
             //Fetch user type
             fbRoot.child("/userType/"+user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
 
@@ -124,22 +145,22 @@ public class MainActivity extends AppCompatActivity {
 
                         }
                         //get details
-                        fbRoot.child(studentNode).child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener(){
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                FacultyProfile fp=dataSnapshot.getValue(FacultyProfile.class);
-                                fp.setUid(user.getUid());
-                                if(fp == null){
-                                    Log.d(TAG, "onDataChange: student profile is NULL");
-                                    return;
-                                }
-                                session.setCurrentUser(fp,FACULTY);
-                            }
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-                                Log.d(TAG, "Fetching profile: onCancelled: "+databaseError);
-                            }
-                        });
+//                        fbRoot.child(studentNode).child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener(){
+//                            @Override
+//                            public void onDataChange(DataSnapshot dataSnapshot) {
+//                                FacultyProfile fp=dataSnapshot.getValue(FacultyProfile.class);
+//                                fp.setUid(user.getUid());
+//                                if(fp == null){
+//                                    Log.d(TAG, "onDataChange: student profile is NULL");
+//                                    return;
+//                                }
+//                                session.setCurrentUser(fp,FACULTY);
+//                            }
+//                            @Override
+//                            public void onCancelled(DatabaseError databaseError) {
+//                                Log.d(TAG, "Fetching profile: onCancelled: "+databaseError);
+//                            }
+//                        });
 
                         fragTransaction = fragManager.beginTransaction();
                         fragTransaction.replace(R.id.container, facultyMainFragment);

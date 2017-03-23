@@ -45,8 +45,8 @@ import java.util.List;
 
 public class StudentMain extends Fragment {
 
-    private FirebaseDatabase database;
     private DatabaseReference dbroot;
+    private FirebaseDatabase database;
     private FirebaseAuth auth;
     private StudentProfile thisStudent;
     private SessionManager sessionManager;
