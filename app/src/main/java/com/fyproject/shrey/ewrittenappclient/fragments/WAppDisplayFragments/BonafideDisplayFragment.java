@@ -37,7 +37,7 @@ public class BonafideDisplayFragment extends Fragment {
 
     private DatabaseReference fbRoot;
 
-    private WAppLeave leaveApp;
+    private WAppBonafide bonafideApp;
 
     public String STUDENT;
     public String FACULTY;
@@ -55,7 +55,7 @@ public class BonafideDisplayFragment extends Fragment {
         btnReject= (Button) v.findViewById(R.id.btnReject);
         STUDENT = getString(R.string.student);
         FACULTY = getString(R.string.faculty);
-        leaveApp =(WAppLeave) ViewApplicaion.info;
+        bonafideApp = (WAppBonafide) ViewApplicaion.info;
 
         FirebaseDatabase.getInstance().getReference();
 
@@ -93,11 +93,11 @@ public class BonafideDisplayFragment extends Fragment {
         if( ViewApplicaion.USERTYPE.equals(STUDENT)) {
             //STUDENT Display wApp code
 
-            tvToName.append(leaveApp.toName);
-            tvFromName.setText(leaveApp.fromName);
-            tvFromInfo.setText(leaveApp.classInfo);
-            tvMessage.setText(leaveApp.message);
-            tvStatus.setText(leaveApp.status.toUpperCase());
+            tvToName.append(bonafideApp.toName);
+            tvFromName.setText(bonafideApp.fromName);
+            tvFromInfo.setText(bonafideApp.classInfo);
+            tvMessage.setText(bonafideApp.message);
+            tvStatus.setText(bonafideApp.status.toUpperCase());
 
 
             //fetch application from firebase; 'info' is static import from ViewApplication
@@ -141,8 +141,8 @@ public class BonafideDisplayFragment extends Fragment {
     }
 
     public void UpdateStatus(String status){
-        String wAppPath1="/applicationsNode/"+leaveApp.toUid+"/"+leaveApp.getwAppId();
-        String wAppPath2="/applicationsNode/"+leaveApp.fromUid+"/"+leaveApp.getwAppId();
+        String wAppPath1="/applicationsNode/"+bonafideApp.toUid+"/"+bonafideApp.getwAppId();
+        String wAppPath2="/applicationsNode/"+bonafideApp.fromUid+"/"+bonafideApp.getwAppId();
 
         Map<String, Object> updateStatus = new HashMap<String, Object>();
 
@@ -166,23 +166,23 @@ public class BonafideDisplayFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-        Log.d(TAG, "LeaveDisplayFragment onStop: ");
+        Log.d(TAG, "BonafideDisplayFragment onStop: ");
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        Log.d(TAG, "LeaveDisplayFragment onDetach: ");
+        Log.d(TAG, "BonafideDisplayFragment onDetach: ");
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        Log.d(TAG, " LeaveDisplayFragment onDestroyView: ");
+        Log.d(TAG, " BonafideDisplayFragment onDestroyView: ");
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d(TAG, "LeaveDisplayFragment onDestroy: ");
+        Log.d(TAG, "BonafideDisplayFragment onDestroy: ");
     }}

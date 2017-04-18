@@ -19,6 +19,7 @@ public class WAppOrganizeEvent extends WAppBase {
     public String message;
     public String startDate;
     public String endDate;
+    public String time;
     public String response="null";
     public String attachedFile="null";
 

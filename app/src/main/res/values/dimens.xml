@@ -16,6 +16,7 @@
 
     <dimen name="fab_margin">16dp</dimen>
 
+    <dimen name="common_margin">10dp</dimen>
     <dimen name="logo_dimension">30dp</dimen>
 
 

@@ -74,14 +74,11 @@ public class LeaveDisplayFragment extends Fragment {
         } else if( ViewApplicaion.USERTYPE.equals(FACULTY) ){
             setUpFacultyGUI();
         }
-
-
     }
 
     private void setUpStudentGUI(View v){
         btnAccept.setVisibility(View.GONE);
         btnReject.setVisibility(View.GONE);
-
     }
 
     private void setUpFacultyGUI(){
