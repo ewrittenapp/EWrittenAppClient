@@ -75,45 +75,8 @@ public class MainActivity extends AppCompatActivity {
             final StudentMain studentMainFragment=new StudentMain();
             final FacultyMain facultyMainFragment=new FacultyMain();
 
-            fbRoot.child("/studentNode/"+user.getUid()).addListenerForSingleValueEvent(new ValueEventListener(){
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    StudentProfile sp=dataSnapshot.getValue(StudentProfile.class);
-                    if(sp == null){
-                        Log.d(TAG, "onDataChange: student profile is NULL");
-                        return;
-                    }
-                    sp.setUid(user.getUid());
-                    Log.d(TAG, "StudentProfile: "+sp.fname);
-                    session.setCurrentUser(sp,"STUDENT");
-
-                }
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    Log.d(TAG, "Fetching profile: onCancelled: "+databaseError);
-                }
-            });
-
-            fbRoot.child("/facultyNode/"+user.getUid()).addListenerForSingleValueEvent(new ValueEventListener(){
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    FacultyProfile fp=dataSnapshot.getValue(FacultyProfile.class);
-                    if(fp == null){
-                        Log.d(TAG, "onDataChange: student profile is NULL");
-                        return;
-                    }
-                    fp.setUid(user.getUid());
-                    Log.d(TAG, "StudentProfile: "+fp.name);
-                    session.setCurrentUser(fp,"FACULTY");
-
-                }
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    Log.d(TAG, "Fetching profile: onCancelled: "+databaseError);
-                }
-            });
-
-
+            FetchStudentData(user);
+            FetchFacultyData(user);
 
             //Fetch user type
             fbRoot.child("/userType/"+user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -131,9 +94,6 @@ public class MainActivity extends AppCompatActivity {
                             getSupportActionBar().setDisplayShowHomeEnabled(true);
                             getSupportActionBar().setTitle(R.string.student_home);
                         }
-                        //get details
-
-
                         fragTransaction = fragManager.beginTransaction();
                         fragTransaction.replace(R.id.container, studentMainFragment);
                         fragTransaction.commit();
@@ -142,26 +102,7 @@ public class MainActivity extends AppCompatActivity {
                         if (getSupportActionBar() != null) {
                             getSupportActionBar().setDisplayShowHomeEnabled(true);
                             getSupportActionBar().setTitle(R.string.faculty_home);
-
                         }
-                        //get details
-//                        fbRoot.child(studentNode).child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener(){
-//                            @Override
-//                            public void onDataChange(DataSnapshot dataSnapshot) {
-//                                FacultyProfile fp=dataSnapshot.getValue(FacultyProfile.class);
-//                                fp.setUid(user.getUid());
-//                                if(fp == null){
-//                                    Log.d(TAG, "onDataChange: student profile is NULL");
-//                                    return;
-//                                }
-//                                session.setCurrentUser(fp,FACULTY);
-//                            }
-//                            @Override
-//                            public void onCancelled(DatabaseError databaseError) {
-//                                Log.d(TAG, "Fetching profile: onCancelled: "+databaseError);
-//                            }
-//                        });
-
                         fragTransaction = fragManager.beginTransaction();
                         fragTransaction.replace(R.id.container, facultyMainFragment);
                         fragTransaction.commit();
@@ -170,7 +111,6 @@ public class MainActivity extends AppCompatActivity {
                         Log.d(TAG, "onAuthStateChanged: Unexpected:: no userType fetched");
                         finish();
                     }
-
                 }
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
@@ -204,6 +144,48 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void FetchStudentData(final FirebaseUser user){
+
+        fbRoot.child("/studentNode/"+user.getUid()).addListenerForSingleValueEvent(new ValueEventListener(){
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                StudentProfile sp=dataSnapshot.getValue(StudentProfile.class);
+                if(sp == null){
+                    Log.d(TAG, "onDataChange: student profile is NULL");
+                    return;
+                }
+                sp.setUid(user.getUid());
+                Log.d(TAG, "StudentProfile: "+sp.fname);
+                session.setCurrentUser(sp,"STUDENT");
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d(TAG, "Fetching profile: onCancelled: "+databaseError);
+            }
+        });
+
+    }
+
+    private void FetchFacultyData(final FirebaseUser user){
+        fbRoot.child("/facultyNode/"+user.getUid()).addListenerForSingleValueEvent(new ValueEventListener(){
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                FacultyProfile fp=dataSnapshot.getValue(FacultyProfile.class);
+                if(fp == null){
+                    Log.d(TAG, "onDataChange: student profile is NULL");
+                    return;
+                }
+                fp.setUid(user.getUid());
+                Log.d(TAG, "FacultyProfile: "+fp.name);
+                session.setCurrentUser(fp,"FACULTY");
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d(TAG, "Fetching profile: onCancelled: "+databaseError);
+            }
+        });
+    }
+
     @Override
     public void onStart() {
         super.onStart();
@@ -232,7 +214,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (id == R.id.sign_out) {
             if(isFirebaseConnected){
-        //        session.clearCurrentUser();
+                session.clearCurrentUser();
                 auth.signOut();
                 Log.d(TAG, "user signed out");
                 startActivity(new Intent(MainActivity.this, LoginActivity.class));

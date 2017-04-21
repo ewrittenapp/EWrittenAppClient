@@ -21,6 +21,17 @@
         <item>@string/custom</item>
     </string-array>
 
+    <string-array name="ComplaintType">
+        <item>Ragging</item>
+        <item>canteen</item>
+        <item>other</item>
+    </string-array>
+
+    <string-array name="IssueType">
+        <item>Lab equipment</item>
+        <item>Building / Object</item>
+    </string-array>
+
     <!--firebase path-->
     <string name="studentNode">/studentNode</string>
     <!--LOGIN/AUTHENTICATION layout string resource-->

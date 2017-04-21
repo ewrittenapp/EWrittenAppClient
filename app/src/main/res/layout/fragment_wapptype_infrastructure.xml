@@ -79,7 +79,7 @@
                 android:textStyle="bold" />
 
             <Spinner
-                android:id="@+id/spLocationType"
+                android:id="@+id/spIssueType"
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
                 android:backgroundTint="@color/colorAccent" />
@@ -106,7 +106,7 @@
                 android:textStyle="bold" />
 
             <EditText
-                android:id="@+id/tvDescription"
+                android:id="@+id/etMessage"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
                 android:gravity="start"
@@ -134,7 +134,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:text="Attach Proof (Required): "
+                android:text="Attach Proof: "
                 android:textStyle="bold" />
 
             <TextView

@@ -63,7 +63,7 @@ public class SessionManager {
         editor.commit();
     }
 
-    //get student data
+    //get user data
     public UserProfile getCurrentUser(){
         String userType=getUserType();
 

@@ -25,8 +25,11 @@ import com.fyproject.shrey.ewrittenappclient.helper.SessionManager;
 import com.fyproject.shrey.ewrittenappclient.model.StudentProfile;
 import com.fyproject.shrey.ewrittenappclient.model.WAppBase;
 import com.fyproject.shrey.ewrittenappclient.model.WAppBonafide;
+import com.fyproject.shrey.ewrittenappclient.model.WAppComplaint;
 import com.fyproject.shrey.ewrittenappclient.model.WAppCustom;
+import com.fyproject.shrey.ewrittenappclient.model.WAppInfrastructure;
 import com.fyproject.shrey.ewrittenappclient.model.WAppLeave;
+import com.fyproject.shrey.ewrittenappclient.model.WAppOrganizeEvent;
 import com.fyproject.shrey.ewrittenappclient.model.rvStudentRow;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -121,6 +124,18 @@ public class StudentMain extends Fragment {
                                 rowData = ds.getValue(WAppCustom.class);
                                 break;
 
+                            case "COMPLAINT APPLICATION":
+                                rowData = ds.getValue(WAppComplaint.class);
+                                break;
+
+                            case "ORGANIZE EVENT APPLICATION":
+                                rowData = ds.getValue(WAppOrganizeEvent.class);
+                                break;
+
+                            case "INFRASTRUCTURE APPLICATION":
+                                rowData = ds.getValue(WAppInfrastructure.class);
+                                break;
+
                             default:
                                 rowData = ds.getValue(WAppBase.class);
                                 Toast.makeText(getContext(),no_support, Toast.LENGTH_SHORT).show();
@@ -135,7 +150,7 @@ public class StudentMain extends Fragment {
 
                     @Override
                     public void onChildChanged(DataSnapshot ds, String s) {
-           /*             if(ds.getValue() == null) return;
+                        if(ds.getValue() == null) return;
                         WAppBase rowData;
                         String wAppType = ds.child("type").getValue(String.class);
                         switch (wAppType){ //fetch appropriate wApp and store it to rowData
@@ -150,6 +165,18 @@ public class StudentMain extends Fragment {
 
                             case "CUSTOM APPLICATION":
                                 rowData = ds.getValue(WAppCustom.class);
+                                break;
+
+                            case "COMPLAINT APPLICATION":
+                                rowData = ds.getValue(WAppComplaint.class);
+                                break;
+
+                            case "ORGANIZE EVENT APPLICATION":
+                                rowData = ds.getValue(WAppOrganizeEvent.class);
+                                break;
+
+                            case "INFRASTRUCTURE APPLICATION":
+                                rowData = ds.getValue(WAppInfrastructure.class);
                                 break;
 
                             default:
@@ -167,8 +194,8 @@ public class StudentMain extends Fragment {
                         rv_dataset.set(i,rowData);
                         rv_Adapter.notifyItemChanged(i);
 
-                        Log.d(TAG, " -- > "+rv_dataset.get(i));
-            */
+                        Log.d(TAG, "WAPP CHANGED -- > "+rv_dataset.get(i));
+
                     }
 
                     @Override

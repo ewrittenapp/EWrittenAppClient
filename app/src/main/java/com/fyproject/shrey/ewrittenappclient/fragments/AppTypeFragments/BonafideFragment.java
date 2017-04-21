@@ -46,8 +46,6 @@ import java.util.zip.Inflater;
 
 public class BonafideFragment extends Fragment {
 
-
-
     Spinner spSelectFaculty;
     EditText etReason;
     TextView tvShowFileName;
@@ -142,7 +140,6 @@ public class BonafideFragment extends Fragment {
         }
         Log.d(TAG, "validateInputData: reason: "+etReason.getText().toString());
 
-        Log.d(TAG, "**All Dates are set properly**");
         return true;
     }
 

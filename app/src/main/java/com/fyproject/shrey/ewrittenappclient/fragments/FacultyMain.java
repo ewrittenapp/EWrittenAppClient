@@ -17,14 +17,18 @@ import android.widget.Toast;
 import com.fyproject.shrey.ewrittenappclient.R;
 import com.fyproject.shrey.ewrittenappclient.activity.NewApplication;
 import com.fyproject.shrey.ewrittenappclient.activity.ViewApplicaion;
+import com.fyproject.shrey.ewrittenappclient.adapter.rvFacultyAdapter;
 import com.fyproject.shrey.ewrittenappclient.adapter.rvStudentAdapter;
 import com.fyproject.shrey.ewrittenappclient.helper.SessionManager;
 import com.fyproject.shrey.ewrittenappclient.model.FacultyProfile;
 import com.fyproject.shrey.ewrittenappclient.model.StudentProfile;
 import com.fyproject.shrey.ewrittenappclient.model.WAppBase;
 import com.fyproject.shrey.ewrittenappclient.model.WAppBonafide;
+import com.fyproject.shrey.ewrittenappclient.model.WAppComplaint;
 import com.fyproject.shrey.ewrittenappclient.model.WAppCustom;
+import com.fyproject.shrey.ewrittenappclient.model.WAppInfrastructure;
 import com.fyproject.shrey.ewrittenappclient.model.WAppLeave;
+import com.fyproject.shrey.ewrittenappclient.model.WAppOrganizeEvent;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -43,7 +47,7 @@ public class FacultyMain extends Fragment {
     private FacultyProfile thisFaculty;
     private SessionManager sessionManager;
     private RecyclerView rv_wAppList;
-    private rvStudentAdapter rv_Adapter;
+    private rvFacultyAdapter rv_Adapter;
     private RecyclerView.LayoutManager rvLayoutManager;
     private List<WAppBase> rv_dataset = new ArrayList<>();
     private String TAG="TAG";
@@ -58,7 +62,7 @@ public class FacultyMain extends Fragment {
         rvLayoutManager=new LinearLayoutManager(getContext());
         rv_wAppList.setLayoutManager(rvLayoutManager);
         //set adapter for recycler view
-        rv_Adapter = new rvStudentAdapter(rv_dataset);
+        rv_Adapter = new rvFacultyAdapter(rv_dataset);
         rv_wAppList.setAdapter(rv_Adapter);
         //set rv item animator
         rv_wAppList.setItemAnimator(new DefaultItemAnimator());
@@ -81,7 +85,7 @@ public class FacultyMain extends Fragment {
         InitVariables(view);
 
         InitVariables(view);
-        Log.d(TAG, "onCreateView: StudentMain Frag ");
+        Log.d(TAG, "onCreateView: FacultyMain Frag ");
 
         //Add data to rv
         ChildEventListener childEventListener = dbroot.child("applicationsNode").child(thisFaculty.getUid())
@@ -108,6 +112,18 @@ public class FacultyMain extends Fragment {
                                 rowData = ds.getValue(WAppCustom.class);
                                 break;
 
+                            case "COMPLAINT APPLICATION":
+                                rowData = ds.getValue(WAppComplaint.class);
+                                break;
+
+                            case "ORGANIZE EVENT APPLICATION":
+                                rowData = ds.getValue(WAppOrganizeEvent.class);
+                                break;
+
+                            case "INFRASTRUCTURE APPLICATION":
+                                rowData = ds.getValue(WAppInfrastructure.class);
+                                break;
+
                             default:
                                 rowData = ds.getValue(WAppBase.class);
                                 Toast.makeText(getContext(),no_support, Toast.LENGTH_SHORT).show();
@@ -122,7 +138,7 @@ public class FacultyMain extends Fragment {
 
                     @Override
                     public void onChildChanged(DataSnapshot ds, String s) {
-           /*             if(ds.getValue() == null) return;
+                        if(ds.getValue() == null) return;
                         WAppBase rowData;
                         String wAppType = ds.child("type").getValue(String.class);
                         switch (wAppType){ //fetch appropriate wApp and store it to rowData
@@ -137,6 +153,18 @@ public class FacultyMain extends Fragment {
 
                             case "CUSTOM APPLICATION":
                                 rowData = ds.getValue(WAppCustom.class);
+                                break;
+
+                            case "COMPLAINT APPLICATION":
+                                rowData = ds.getValue(WAppComplaint.class);
+                                break;
+
+                            case "ORGANIZE EVENT APPLICATION":
+                                rowData = ds.getValue(WAppOrganizeEvent.class);
+                                break;
+
+                            case "INFRASTRUCTURE APPLICATION":
+                                rowData = ds.getValue(WAppInfrastructure.class);
                                 break;
 
                             default:
@@ -154,8 +182,8 @@ public class FacultyMain extends Fragment {
                         rv_dataset.set(i,rowData);
                         rv_Adapter.notifyItemChanged(i);
 
-                        Log.d(TAG, " -- > "+rv_dataset.get(i));
-            */
+                        Log.d(TAG, "WAPP CHANGED -- > "+rv_dataset.get(i));
+
                     }
 
                     @Override
@@ -179,7 +207,7 @@ public class FacultyMain extends Fragment {
 
                 });
 
-        rv_Adapter.setOnItemClickListener(new rvStudentAdapter.OnItemClickListener() {
+        rv_Adapter.setOnItemClickListener(new rvFacultyAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View itemView, WAppBase rowData, int position) {
                 //Toast.makeText(getContext(), "pos: "+position, Toast.LENGTH_SHORT).show();

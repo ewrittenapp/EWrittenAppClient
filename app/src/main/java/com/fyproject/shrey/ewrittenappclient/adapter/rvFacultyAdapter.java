@@ -1,6 +1,5 @@
 package com.fyproject.shrey.ewrittenappclient.adapter;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,28 +8,26 @@ import android.widget.TextView;
 
 import com.fyproject.shrey.ewrittenappclient.R;
 import com.fyproject.shrey.ewrittenappclient.model.WAppBase;
-import com.fyproject.shrey.ewrittenappclient.model.rvStudentRow;
 
 import java.util.List;
 
-
 /**
- * Created by shrey
+ * Created by shrey on 23/03/17.
  */
 
-public class rvStudentAdapter extends RecyclerView.Adapter<rvStudentAdapter.MyViewHolder> {
+public class rvFacultyAdapter extends RecyclerView.Adapter<rvFacultyAdapter.MyViewHolder> {
     //WAppBase
     private List<WAppBase> listData;
-    private OnItemClickListener listener;
+    private rvFacultyAdapter.OnItemClickListener listener;
 
     /***** Creating OnItemClickListener *****/
 
     // Define the listener interface
     public interface OnItemClickListener {
-        void onItemClick(View itemView,WAppBase rowData, int position);
+        void onItemClick(View itemView, WAppBase rowData, int position);
     }
     // Define the method that allows the parent activity or fragment to define the listener
-    public void setOnItemClickListener(OnItemClickListener listener) {
+    public void setOnItemClickListener(rvFacultyAdapter.OnItemClickListener listener) {
         this.listener = listener;
     }
     /***** ***************************** *****/
@@ -64,7 +61,7 @@ public class rvStudentAdapter extends RecyclerView.Adapter<rvStudentAdapter.MyVi
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public rvStudentAdapter(List<WAppBase> listing){
+    public rvFacultyAdapter(List<WAppBase> listing){
         this.listData=listing;
     }
 
@@ -80,7 +77,7 @@ public class rvStudentAdapter extends RecyclerView.Adapter<rvStudentAdapter.MyVi
     public void onBindViewHolder(MyViewHolder holder, int position) {
         // get data from List<rvStudentRow> declared in this class
         WAppBase data=listData.get(position);
-        holder.toName.setText(data.getToName());
+        holder.toName.setText(data.fromName);
         holder.appType.setText(data.getType());
         holder.date.setText(data.getDate_submitted());
         holder.status.setText(data.getStatus());  //Can check status here
@@ -96,4 +93,6 @@ public class rvStudentAdapter extends RecyclerView.Adapter<rvStudentAdapter.MyVi
     public int getItemCount() {
         return listData.size();
     }
+
+
 }

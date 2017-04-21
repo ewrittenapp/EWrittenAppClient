@@ -1,8 +1,13 @@
 package com.fyproject.shrey.ewrittenappclient.fragments.WAppDisplayFragments;
 
 
+import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +25,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.StorageReference;
 
+import org.apache.commons.io.FilenameUtils;
+
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,6 +52,8 @@ public class LeaveDisplayFragment extends Fragment {
     private Button btnReject; //Faculty
 
     private DatabaseReference fbRoot;
+    private StorageReference storageRef;
+    private Uri fileUri;
 
     private WAppLeave leaveApp;
 
@@ -65,6 +76,7 @@ public class LeaveDisplayFragment extends Fragment {
         STUDENT = getString(R.string.student);
         FACULTY = getString(R.string.faculty);
         leaveApp =(WAppLeave) ViewApplicaion.info;
+        fbRoot=FirebaseDatabase.getInstance().getReference();
 
         FirebaseDatabase.getInstance().getReference();
 
@@ -95,6 +107,23 @@ public class LeaveDisplayFragment extends Fragment {
         View view=inflater.inflate(R.layout.fragment_display_leave, container, false);
         initialization(view);
 
+        if(leaveApp.attachedFile != "null"){
+            //Code to download file
+
+        }
+
+        btnFile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(fileUri != null){
+                    //**** @Shahrukh TO-DO: CHECK THIS FUNCTION AND USE IT as per requirement
+                    //  viewFile(fileUri);
+                }else {
+                    Toast.makeText(getActivity(), "No file attached", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
 
         if( ViewApplicaion.USERTYPE.equals(STUDENT)) {
             //STUDENT Display wApp code
@@ -108,26 +137,17 @@ public class LeaveDisplayFragment extends Fragment {
             tvStatus.setText(leaveApp.status.toUpperCase());
 
 
-            //fetch application from firebase; 'info' is static import from ViewApplication
-//            String wAppPath="/applicationsNode/"+ViewApplicaion.thisStudent.getUid()+"/"+info.getwAppId();
-//            fbRoot.child(wAppPath).addListenerForSingleValueEvent(new ValueEventListener() {
-//                @Override
-//                public void onDataChange(DataSnapshot dataSnapshot) {
-//                    leaveApp = dataSnapshot.getValue(WAppLeave.class);
-//                    Log.d(TAG, "wApp data fetch: "+leaveApp.toName+" "+leaveApp.message);
-//                    tvFromInfo.append(leaveApp.classInfo);
-//                }
-//
-//                @Override
-//                public void onCancelled(DatabaseError databaseError) {
-//
-//                }
-//            });
-
         }else if( ViewApplicaion.USERTYPE.equals(FACULTY) ) {
             //FACULTY Display wApp code
 
 
+            tvToName.append(leaveApp.toName);
+            tvFromName.setText(leaveApp.fromName);
+            tvFromInfo.setText(leaveApp.classInfo);
+            tvStartDate.append(leaveApp.startDate);
+            tvEndDate.append(leaveApp.endDate);
+            tvMessage.setText(leaveApp.message);
+            tvStatus.setText(leaveApp.status.toUpperCase());
 
             btnAccept.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -146,6 +166,38 @@ public class LeaveDisplayFragment extends Fragment {
         }
 
         return view;
+    }
+
+    //**** @Shahrukh TO-DO: CHECK THIS FUNCTION AND USE IT as per requirement
+    private void viewFile(Uri fileUri) {
+        File file = new File(fileUri.toString());
+        String fileExt = FilenameUtils.getExtension(file.getPath());
+        Log.d(TAG, "viewPdf: file path = "+file.getPath()+" | file extension = "+ fileExt);
+
+        Intent intent;
+        intent = new Intent(Intent.ACTION_VIEW);
+        intent.setDataAndType(fileUri, "application/"+fileExt);
+        try {
+            startActivity(intent);
+        } catch (ActivityNotFoundException e) {
+            // No application to view, ask to download one
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setTitle("No Application Found");
+            builder.setMessage("Download one from Android Market?");
+            builder.setPositiveButton("Yes, Please",
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent marketIntent = new Intent(Intent.ACTION_VIEW);
+                            marketIntent
+                                    .setData(Uri
+                                            .parse("market://details?id=com.adobe.reader"));
+                            startActivity(marketIntent);
+                        }
+                    });
+            builder.setNegativeButton("No, Thanks", null);
+            builder.create().show();
+        }
     }
 
     public void UpdateStatus(String status){

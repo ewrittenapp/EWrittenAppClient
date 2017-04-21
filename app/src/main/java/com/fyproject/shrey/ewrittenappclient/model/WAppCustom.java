@@ -14,7 +14,7 @@ import java.util.Date;
 public class WAppCustom extends WAppBase {
     public String enroll;
     public String classInfo;
-    public String subject;
+    public String subject="No Subject";
     public String message;
     public String response="null";
     public String attachedFile="null";

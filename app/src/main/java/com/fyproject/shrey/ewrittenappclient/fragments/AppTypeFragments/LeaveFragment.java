@@ -1,6 +1,5 @@
 package com.fyproject.shrey.ewrittenappclient.fragments.AppTypeFragments;
 
-import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -8,6 +7,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -34,11 +34,19 @@ import com.fyproject.shrey.ewrittenappclient.helper.DatePickerFragment;
 import com.fyproject.shrey.ewrittenappclient.model.FacultyList;
 import com.fyproject.shrey.ewrittenappclient.model.StudentProfile;
 import com.fyproject.shrey.ewrittenappclient.model.WAppLeave;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageMetadata;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
 import java.text.DateFormat;
@@ -61,6 +69,7 @@ public class LeaveFragment extends Fragment{
     private ImageView ivEndDatePicker;
     private TextView tvShowStartDate;
     private TextView tvShowEndDate;
+    private TextView tvShowFileName;
     private EditText etReason;
     private Button btnUploadFile;
     private Button btnSubmit;
@@ -69,12 +78,15 @@ public class LeaveFragment extends Fragment{
     FragmentManager fm;
 
     private DatabaseReference fbRoot;
+    private FirebaseStorage fbstorage;
+    private StorageReference storageRef;
+    private Uri fileUri;
 
+    private WAppLeave leaveApp;
     Calendar startDate;
     Calendar endDate;
     Converter converter=new Converter();
     StudentProfile thisStudent = NewApplication.thisStudent;
-    private WAppLeave leaveApp;
     final String branch=converter.convertBranch(thisStudent.branch);
     final String sem=converter.convertSem(thisStudent.sem);
     final String Class=converter.convertClass(thisStudent.div);
@@ -90,9 +102,12 @@ public class LeaveFragment extends Fragment{
         ivEndDatePicker= (ImageView) view.findViewById(R.id.ivEndDatePicker);
         tvShowStartDate= (TextView) view.findViewById(R.id.tvShowStartDate);
         tvShowEndDate= (TextView) view.findViewById(R.id.tvShowEndDate);
+        tvShowFileName = (TextView) view.findViewById(R.id.tvShowFileName);
         etReason= (EditText) view.findViewById(R.id.etReason);
         btnSubmit= (Button) view.findViewById(R.id.btnSubmit);
         fbRoot= FirebaseDatabase.getInstance().getReference();
+        fbstorage = FirebaseStorage.getInstance();
+        storageRef = fbstorage.getReference();
 
         leaveApp=new WAppLeave(thisStudent,getActivity());//leave app initialized with student data
         fm = getActivity().getSupportFragmentManager();
@@ -116,45 +131,7 @@ public class LeaveFragment extends Fragment{
         View view= inflater.inflate(R.layout.fragment_wapptype_leave, container, false);
 
         initialization(view);
-
-        //final List<String> facultyNamesList = new ArrayList<>();
-        final List<String> facultyUidList = new ArrayList<>();
-        final ArrayAdapter<String> spAdapter= new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item);
-        //Fetch faculty
-        fbRoot.child("/facultyList/"+branch).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot ds: dataSnapshot.getChildren()) {
-                    FacultyList faculty= ds.getValue(FacultyList.class);
-                    spAdapter.add(faculty.getName());
-                    facultyUidList.add(ds.getKey());
-                    Log.d(TAG, "faculty fetched: "+faculty.getName()+" | "+ds.getKey());
-                }
-                spAdapter.notifyDataSetChanged();
-
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.d(TAG, "onCancelled: facultyNamesList Fetch"+databaseError);
-            }
-        });
-
-        spAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spSelectFaculty.setAdapter(spAdapter);
-
-        //faculty select
-        spSelectFaculty.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-                String selectedItem = adapterView.getItemAtPosition(position).toString();
-                Log.d(TAG, selectedItem+" | "+facultyUidList.get(position));
-                leaveApp.toName=selectedItem;
-                leaveApp.toUid=facultyUidList.get(position);
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-            }
-        });
+        setRecipientSpinner();
 
         //Date selection button event
         ivStartDatePicker.setOnClickListener(new View.OnClickListener() {
@@ -193,12 +170,41 @@ public class LeaveFragment extends Fragment{
                     updatePaths.put(to_path + "/" + appId, leaveApp);
                     updatePaths.put(from_path + "/" + appId, leaveApp);
 
+                    if(fileUri!=null){
+                        // Save the file at "appId" location
+                        StorageReference fbpath=storageRef.child(appId);
+                        leaveApp.attachedFile= fbpath.getPath();
+                        Log.d(TAG, "cloud file path: "+fbpath.getPath());
+
+                        UploadTask upload = fbpath.putFile(fileUri);
+                        upload.addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.d(TAG, "onFailure: "+e);
+                                Toast.makeText(getActivity(),"File Upload fail", Toast.LENGTH_SHORT).show();
+                            }
+                        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                Uri d = taskSnapshot.getDownloadUrl();
+                                Log.d(TAG, "onSuccess: DwnloadUrl: "+d);
+                                StorageMetadata sm=taskSnapshot.getMetadata();
+                                Log.d(TAG, "Type: "+sm.getContentType());
+                                Log.d(TAG, "Name: "+sm.getName());
+                                Log.d(TAG, "Path: "+sm.getPath());
+                                Toast.makeText(getContext(), "application sent!", Toast.LENGTH_SHORT).show();
+                                getActivity().finish();
+                            }
+                        });
+
+                    }
+
                     fbRoot.updateChildren(updatePaths, new DatabaseReference.CompletionListener() {
                         @Override
                         public void onComplete(DatabaseError error, DatabaseReference databaseReference) {
                             if (error == null){
                                 Toast.makeText(getContext(), "application sent!", Toast.LENGTH_SHORT).show();
-                                getActivity().finish();
+                                if(fileUri==null) getActivity().finish();
                                 return; //Success
                             }
                             Log.d(TAG, "onComplete: ERRoR: " + error); //write failure
@@ -229,15 +235,15 @@ public class LeaveFragment extends Fragment{
                 Log.d(TAG, "onActivityResult: endDate: "+endDate.getTime());
                 break;
 
-            case FILE_SELECT_CODE:
+            case FILE_SELECT_CODE:  // Uri of selected file is fetched here ...
                 if (resultCode == RESULT_OK) {
                     // Get the Uri of the selected file
-                    Uri uri = data.getData();
-                    Log.d(TAG, "File Uri: " + uri.toString());
-                    // Get the path
-                    File mFile=new File(uri.toString());
+                    fileUri = data.getData();
+                    File mFile=new File(fileUri.toString());
+                    tvShowFileName.setText(mFile.getName());
+                    
                     //String path = FileUtils.file(uri);
-                    Log.d(TAG, "File Path: " + getRealPathFromURI(uri));
+                    //Log.d(TAG, "File RealPath: " + getRealPathFromURI(fileUri));
                     // Get the file instance
                     // File file = new File(path);
                     // Initiate the upload
@@ -279,13 +285,57 @@ public class LeaveFragment extends Fragment{
         return true;
     }
 
-    private void setInputData(){
+    private void setRecipientSpinner(){
+
+        //final List<String> facultyNamesList = new ArrayList<>();
+        final List<String> facultyUidList = new ArrayList<>();
+        final ArrayAdapter<String> spAdapter= new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item);
+        //Fetch faculty
+        fbRoot.child("/facultyList/"+branch).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot ds: dataSnapshot.getChildren()) {
+                    FacultyList faculty= ds.getValue(FacultyList.class);
+                    spAdapter.add(faculty.getName());
+                    facultyUidList.add(ds.getKey());
+                    Log.d(TAG, "faculty fetched: "+faculty.getName()+" | "+ds.getKey());
+                }
+                spAdapter.notifyDataSetChanged();
+
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d(TAG, "onCancelled: facultyNamesList Fetch"+databaseError);
+            }
+        });
+
+        spAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spSelectFaculty.setAdapter(spAdapter);
+
+        //faculty select
+        spSelectFaculty.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
+                String selectedItem = adapterView.getItemAtPosition(position).toString();
+                Log.d(TAG, selectedItem+" | "+facultyUidList.get(position));
+                leaveApp.toName=selectedItem;
+                leaveApp.toUid=facultyUidList.get(position);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
+
     }
 
-    private void viewPdf(Uri file) {
+    private void viewPdf(Uri fileUri) {
+        File file = new File(fileUri.toString());
+        String fileExt = FilenameUtils.getExtension(file.getPath());
+        Log.d(TAG, "viewPdf: file path = "+file.getPath()+" | file extension = "+ fileExt);
+
         Intent intent;
         intent = new Intent(Intent.ACTION_VIEW);
-        intent.setDataAndType(file, "application/pdf");
+        intent.setDataAndType(fileUri, "application/"+fileExt);
         try {
             startActivity(intent);
         } catch (ActivityNotFoundException e) {
@@ -325,13 +375,14 @@ public class LeaveFragment extends Fragment{
         }
     }
 
-    public String getRealPathFromURI(Uri contentUri){
-        String[] proj = { MediaStore.Audio.Media.DATA };
-        Cursor cursor = getActivity().managedQuery(contentUri, proj, null, null, null);
-        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
-        cursor.moveToFirst();
-        return cursor.getString(column_index);
-    }
+    //*******  NOT Required ********//
+//    public String getRealPathFromURI(Uri contentUri){
+//        String[] proj = { MediaStore.Audio.Media.DATA };
+//        Cursor cursor = getActivity().managedQuery(contentUri, proj, null, null, null);
+//        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
+//        cursor.moveToFirst();
+//        return cursor.getString(column_index);
+//    }
 
     @Override
     public void onStart() {
