@@ -105,22 +105,6 @@ public class CustomDisplayFragment extends Fragment {
             tvStatus.setText(customApp.status.toUpperCase());
 
 
-            //fetch application from firebase; 'info' is static import from ViewApplication
-//            String wAppPath="/applicationsNode/"+ViewApplicaion.thisStudent.getUid()+"/"+info.getwAppId();
-//            fbRoot.child(wAppPath).addListenerForSingleValueEvent(new ValueEventListener() {
-//                @Override
-//                public void onDataChange(DataSnapshot dataSnapshot) {
-//                    leaveApp = dataSnapshot.getValue(WAppLeave.class);
-//                    Log.d(TAG, "wApp data fetch: "+leaveApp.toName+" "+leaveApp.message);
-//                    tvFromInfo.append(leaveApp.classInfo);
-//                }
-//
-//                @Override
-//                public void onCancelled(DatabaseError databaseError) {
-//
-//                }
-//            });
-
         }else if( ViewApplicaion.USERTYPE.equals(FACULTY) ) {
             //FACULTY Display wApp code
 
