@@ -47,6 +47,8 @@ public class BonafideDisplayFragment extends Fragment {
     private TextView tvFromInfo;
     private TextView tvMessage;
     private TextView tvStatus;
+    private TextView tvResponse;
+
     private Button btnFile;
     private Button btnAccept; //Faculty
     private Button btnReject; //Faculty
@@ -61,17 +63,18 @@ public class BonafideDisplayFragment extends Fragment {
     public String STUDENT;
     public String FACULTY;
     private String CurrentUserID;
-    final String TAG="TAG";
+    final String TAG = "TAG";
 
     private void initialization(View v) {
-        tvToName= (TextView) v.findViewById(R.id.tvToName);
-        tvFromName= (TextView) v.findViewById(R.id.tvFromName);
-        tvFromInfo= (TextView) v.findViewById(R.id.tvFromInfo);
-        tvMessage= (TextView) v.findViewById(R.id.tvMessage);
-        tvStatus= (TextView) v.findViewById(R.id.tvStatus);
-        btnFile= (Button) v.findViewById(R.id.btnFile);
-        btnAccept= (Button) v.findViewById(R.id.btnAccept);
-        btnReject= (Button) v.findViewById(R.id.btnReject);
+        tvToName = (TextView) v.findViewById(R.id.tvToName);
+        tvFromName = (TextView) v.findViewById(R.id.tvFromName);
+        tvFromInfo = (TextView) v.findViewById(R.id.tvFromInfo);
+        tvMessage = (TextView) v.findViewById(R.id.tvMessage);
+        tvStatus = (TextView) v.findViewById(R.id.tvStatus);
+        btnFile = (Button) v.findViewById(R.id.btnFile);
+        btnAccept = (Button) v.findViewById(R.id.btnAccept);
+        btnReject = (Button) v.findViewById(R.id.btnReject);
+        tvResponse = (TextView) v.findViewById(R.id.tvResponse);
         STUDENT = getString(R.string.student);
         FACULTY = getString(R.string.faculty);
         bonafideApp = (WAppBonafide) ViewApplicaion.info;
@@ -80,22 +83,22 @@ public class BonafideDisplayFragment extends Fragment {
         fbstorage = FirebaseStorage.getInstance();
         storageRef = fbstorage.getReference();
         //check user type and set UI accordingly
-        if( ViewApplicaion.USERTYPE.equals(STUDENT) ){
+        if (ViewApplicaion.USERTYPE.equals(STUDENT)) {
             setUpStudentGUI(v);
-        } else if( ViewApplicaion.USERTYPE.equals(FACULTY) ){
+        } else if (ViewApplicaion.USERTYPE.equals(FACULTY)) {
             setUpFacultyGUI();
         }
 
 
     }
 
-    private void setUpStudentGUI(View v){
+    private void setUpStudentGUI(View v) {
         btnAccept.setVisibility(View.GONE);
         btnReject.setVisibility(View.GONE);
 
     }
 
-    private void setUpFacultyGUI(){
+    private void setUpFacultyGUI() {
         tvToName.setVisibility(View.GONE);
     }
 
@@ -106,7 +109,7 @@ public class BonafideDisplayFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view=inflater.inflate(R.layout.fragment_display_leave, container, false);
+        View view = inflater.inflate(R.layout.fragment_display_leave, container, false);
         initialization(view);
 
         downloadAttachment();
@@ -122,7 +125,7 @@ public class BonafideDisplayFragment extends Fragment {
             }
         });
 
-        if( ViewApplicaion.USERTYPE.equals(STUDENT)) {
+        if (ViewApplicaion.USERTYPE.equals(STUDENT)) {
             //STUDENT Display wApp code
             tvToName.append(bonafideApp.toName);
             tvFromName.setText(bonafideApp.fromName);
@@ -130,8 +133,7 @@ public class BonafideDisplayFragment extends Fragment {
             tvMessage.setText(bonafideApp.message);
             tvStatus.setText(bonafideApp.status.toUpperCase());
 
-
-        }else if( ViewApplicaion.USERTYPE.equals(FACULTY) ) {
+        } else if (ViewApplicaion.USERTYPE.equals(FACULTY)) {
             //FACULTY Display wApp code
             btnAccept.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -254,19 +256,19 @@ public class BonafideDisplayFragment extends Fragment {
 
     }
 
-    public void UpdateStatus(String status){
-        String wAppPath1="/applicationsNode/"+bonafideApp.toUid+"/"+bonafideApp.getwAppId();
-        String wAppPath2="/applicationsNode/"+bonafideApp.fromUid+"/"+bonafideApp.getwAppId();
+    public void UpdateStatus(String status) {
+        String wAppPath1 = "/applicationsNode/" + bonafideApp.toUid + "/" + bonafideApp.getwAppId();
+        String wAppPath2 = "/applicationsNode/" + bonafideApp.fromUid + "/" + bonafideApp.getwAppId();
 
         Map<String, Object> updateStatus = new HashMap<String, Object>();
 
-        updateStatus.put(wAppPath1+"/status/",status);
-        updateStatus.put(wAppPath2+"/status/",status);
+        updateStatus.put(wAppPath1 + "/status/", status);
+        updateStatus.put(wAppPath2 + "/status/", status);
 
         fbRoot.updateChildren(updateStatus, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError error, DatabaseReference databaseReference) {
-                if (error == null){ //Success
+                if (error == null) { //Success
                     Toast.makeText(getContext(), "application sent!", Toast.LENGTH_SHORT).show();
                     getActivity().finish();
                     return;
@@ -299,4 +301,5 @@ public class BonafideDisplayFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         Log.d(TAG, "BonafideDisplayFragment onDestroy: ");
-    }}
+    }
+}

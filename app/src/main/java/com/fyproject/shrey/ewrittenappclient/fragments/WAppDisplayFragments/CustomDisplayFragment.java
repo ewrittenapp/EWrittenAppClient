@@ -51,6 +51,8 @@ public class CustomDisplayFragment extends Fragment {
     private TextView tvSubject;
     private TextView tvDescription;
     private TextView tvStatus;
+    private TextView tvResponse;
+
     private Button btnFile;
     private Button btnAccept; //Faculty
     private Button btnReject; //Faculty
@@ -87,6 +89,8 @@ public class CustomDisplayFragment extends Fragment {
         btnFile = (Button) v.findViewById(R.id.btnFile);
         btnAccept = (Button) v.findViewById(R.id.btnAccept);
         btnReject = (Button) v.findViewById(R.id.btnReject);
+        tvResponse = (TextView) v.findViewById(R.id.tvResponse);
+
         STUDENT = getString(R.string.student);
         FACULTY = getString(R.string.faculty);
         customApp = (WAppCustom) ViewApplicaion.info;
