@@ -172,8 +172,7 @@
                 android:id="@+id/btnUpload"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="file"
-                android:layout_weight="2"/>
+                android:text="choose file" />
 
 
         </LinearLayout>
