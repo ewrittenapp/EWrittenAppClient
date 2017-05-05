@@ -277,9 +277,9 @@ public class ComplaintDisplayFragment extends Fragment {
         String wAppPath2="/applicationsNode/"+complaintApp.fromUid+"/"+complaintApp.getwAppId();
 
         Map<String, Object> updateStatus = new HashMap<String, Object>();
-
-        updateStatus.put(wAppPath1+"/status/",status);
-        updateStatus.put(wAppPath2+"/status/",status);
+        complaintApp.setStatus(status);
+        updateStatus.put(wAppPath1+"/", complaintApp);
+        updateStatus.put(wAppPath2+"/", complaintApp);
 
         fbRoot.updateChildren(updateStatus, new DatabaseReference.CompletionListener() {
             @Override

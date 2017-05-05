@@ -200,26 +200,29 @@ public class StudentMain extends Fragment {
 
                     @Override
                     public void onChildRemoved(DataSnapshot ds) {
-//                        WAppBase rowData = ds.getValue(WAppLeave.class);
-//                        rowData.setwAppId(ds.getKey());
-//                        rv_dataset.remove(rowData);
-//                        rv_Adapter.notifyDataSetChanged();
+                        String k = ds.getKey();
+                        int i;
+                        for (i = 0; i < rv_dataset.size(); i++) {
+                            if(rv_dataset.get(i).wAppId.equals(k)) break;
+                        }//i contains index of key
 
+                        WAppBase wapp = rv_dataset.remove(i);
+                        Log.d(TAG, "onChildRemoved: "+wapp);
+                        rv_Adapter.notifyItemRemoved(i);
                     }
 
                     @Override
                     public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
                     }
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
                         Log.d(TAG, "onCancelled: "+databaseError);
                     }
-
                 });
 
         rv_Adapter.setOnItemClickListener(new rvStudentAdapter.OnItemClickListener() {
+
             @Override
             public void onItemClick(View itemView, WAppBase rowData, int position) {
                 //Toast.makeText(getContext(), "pos: "+position, Toast.LENGTH_SHORT).show();
@@ -227,10 +230,23 @@ public class StudentMain extends Fragment {
 
                 Intent info = new Intent(getActivity(), ViewApplicaion.class);
                 info.putExtra("WAPP_INFO", rowData);
-//                info.putExtra("FROM_UID",rowData.fromUid);
-//                info.putExtra("APP_ID",rowData.getwAppId());
-//                info.putExtra("APP_TYPE",rowData.getType());
                 startActivity(info);
+            }
+
+            @Override
+            public void onItemLongClick(View itemView, WAppBase rowData, int position) {
+                //DELETE SELECTED Item
+                String path = "/applicationsNode/" + thisStudent.getUid() + "/" + rowData.getwAppId();
+                dbroot.child(path).removeValue(new DatabaseReference.CompletionListener() {
+                    @Override
+                    public void onComplete(DatabaseError error, DatabaseReference databaseReference) {
+                        if(error == null){
+                            Toast.makeText(getContext(), "Item Removed", Toast.LENGTH_SHORT).show();
+                        }else{
+                            Log.d(TAG, "onComplete: ERROR:: "+error);
+                        }
+                    }
+                });
             }
         });
 /*

@@ -24,9 +24,11 @@ import com.fyproject.shrey.ewrittenappclient.model.WAppBonafide;
 import com.fyproject.shrey.ewrittenappclient.model.WAppLeave;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -109,21 +111,10 @@ public class BonafideDisplayFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_display_leave, container, false);
+        View view = inflater.inflate(R.layout.fragment_display_bonafide, container, false);
         initialization(view);
 
-        downloadAttachment();
-        btnFile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (bonafideApp.attachedFile != "null") {
-                    //**** @Shahrukh TO-DO: CHECK THIS FUNCTION AND USE IT as per requirement
-                    viewFile(fileUri);
-                } else {
-                    Toast.makeText(getActivity(), "No file attached", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+
 
         if (ViewApplicaion.USERTYPE.equals(STUDENT)) {
             //STUDENT Display wApp code
@@ -151,11 +142,25 @@ public class BonafideDisplayFragment extends Fragment {
 
         }
 
+        downloadAttachment();
+
+        btnFile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (bonafideApp.attachedFile.equals("null") ) {
+                    //**** @Shahrukh TO-DO: CHECK THIS FUNCTION AND USE IT as per requirement
+                    viewFile(fileUri);
+                } else {
+                    Toast.makeText(getActivity(), "No file attached", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
         return view;
     }
 
     private void downloadAttachment() {
-        if (bonafideApp.attachedFile != "null") {
+        if (bonafideApp.attachedFile.equals("null") ) {
             //Code to download file
             File rootPath = new File(Environment.getExternalStorageDirectory(), "EWAPP");
             if (!rootPath.exists()) {
@@ -217,41 +222,53 @@ public class BonafideDisplayFragment extends Fragment {
     }
 
     private String appCallType(String extension) {
-        if (extension.equals("doc") || extension.equals("docx")) {
-            return "application/msword";
-        } else if (extension.equals("pdf")) {
-            // PDF file
-            return "application/pdf";
-        } else if (extension.equals("ppt") || extension.equals("pptx")) {
-            // Powerpoint file
-            return "application/vnd.ms-powerpoint";
-        } else if (extension.equals("xls") || extension.equals("xlsx")) {
-            // Excel file
-            return "application/vnd.ms-excel";
-        } else if (extension.equals("zip") || extension.equals("rar")) {
-            // WAV audio file
-            return "application/x-wav";
-        } else if (extension.equals("rtf")) {
-            // RTF file
-            return "application/rtf";
-        } else if (extension.equals("wav") || extension.equals("mp3")) {
-            // WAV audio file
-            return "audio/x-wav";
-        } else if (extension.equals("gif")) {
-            // GIF file
-            return "image/gif";
-        } else if (extension.equals("jpg") || extension.equals("jpeg") || extension.equals("png")) {
-            // JPG file
-            return "image/jpeg";
-        } else if (extension.equals("txt")) {
-            // Text file
-            return "text/plain";
-        } else if (extension.equals("3gp") || extension.equals("mpg") || extension.equals("mpeg") || extension.equals("mpe") ||
-                extension.equals("mp4") || extension.equals("avi")) {
-            // Video files
-            return "video/*";
-        } else {
-            return "*/*";
+        switch (extension) {
+            case "doc":
+            case "docx":
+                return "application/msword";
+            case "pdf":
+                // PDF file
+                return "application/pdf";
+            case "ppt":
+            case "pptx":
+                // Powerpoint file
+                return "application/vnd.ms-powerpoint";
+            case "xls":
+            case "xlsx":
+                // Excel file
+                return "application/vnd.ms-excel";
+            case "zip":
+            case "rar":
+                // WAV audio file
+                return "application/x-wav";
+            case "rtf":
+                // RTF file
+                return "application/rtf";
+            case "wav":
+            case "mp3":
+                // WAV audio file
+                return "audio/x-wav";
+            case "gif":
+                // GIF file
+                return "image/gif";
+            case "jpg":
+            case "jpeg":
+            case "png":
+                // JPG file
+                return "image/jpeg";
+            case "txt":
+                // Text file
+                return "text/plain";
+            case "3gp":
+            case "mpg":
+            case "mpeg":
+            case "mpe":
+            case "mp4":
+            case "avi":
+                // Video files
+                return "video/*";
+            default:
+                return "*/*";
         }
 
     }
@@ -261,9 +278,9 @@ public class BonafideDisplayFragment extends Fragment {
         String wAppPath2 = "/applicationsNode/" + bonafideApp.fromUid + "/" + bonafideApp.getwAppId();
 
         Map<String, Object> updateStatus = new HashMap<String, Object>();
-
-        updateStatus.put(wAppPath1 + "/status/", status);
-        updateStatus.put(wAppPath2 + "/status/", status);
+        bonafideApp.setStatus(status);
+        updateStatus.put(wAppPath1+"/", bonafideApp);
+        updateStatus.put(wAppPath2+"/", bonafideApp);
 
         fbRoot.updateChildren(updateStatus, new DatabaseReference.CompletionListener() {
             @Override

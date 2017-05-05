@@ -275,9 +275,9 @@ public class CustomDisplayFragment extends Fragment {
         String wAppPath2="/applicationsNode/"+customApp.fromUid+"/"+customApp.getwAppId();
 
         Map<String, Object> updateStatus = new HashMap<String, Object>();
-
-        updateStatus.put(wAppPath1+"/status/",status);
-        updateStatus.put(wAppPath2+"/status/",status);
+        customApp.setStatus(status);
+        updateStatus.put(wAppPath1+"/", customApp);
+        updateStatus.put(wAppPath2+"/", customApp);
 
         fbRoot.updateChildren(updateStatus, new DatabaseReference.CompletionListener() {
             @Override

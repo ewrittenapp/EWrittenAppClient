@@ -143,9 +143,9 @@ public class OrganizeEventDisplayFragment extends Fragment {
         String wAppPath2="/applicationsNode/"+eventApp.fromUid+"/"+eventApp.getwAppId();
 
         Map<String, Object> updateStatus = new HashMap<String, Object>();
-
-        updateStatus.put(wAppPath1+"/status/",status);
-        updateStatus.put(wAppPath2+"/status/",status);
+        eventApp.setStatus(status);
+        updateStatus.put(wAppPath1+"/", eventApp);
+        updateStatus.put(wAppPath2+"/", eventApp);
 
         fbRoot.updateChildren(updateStatus, new DatabaseReference.CompletionListener() {
             @Override

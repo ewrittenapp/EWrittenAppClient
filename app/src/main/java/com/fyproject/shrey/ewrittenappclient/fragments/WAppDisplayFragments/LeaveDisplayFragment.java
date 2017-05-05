@@ -287,9 +287,9 @@ public class LeaveDisplayFragment extends Fragment {
         String wAppPath2 = "/applicationsNode/" + leaveApp.fromUid + "/" + leaveApp.getwAppId();
 
         Map<String, Object> updateStatus = new HashMap<String, Object>();
-
-        updateStatus.put(wAppPath1 + "/status/", status);
-        updateStatus.put(wAppPath2 + "/status/", status);
+        leaveApp.setStatus(status);
+        updateStatus.put(wAppPath1+"/", leaveApp);
+        updateStatus.put(wAppPath2+"/", leaveApp);
 
         fbRoot.updateChildren(updateStatus, new DatabaseReference.CompletionListener() {
             @Override

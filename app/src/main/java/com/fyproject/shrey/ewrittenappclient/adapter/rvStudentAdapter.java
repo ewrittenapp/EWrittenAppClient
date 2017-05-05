@@ -2,6 +2,7 @@ package com.fyproject.shrey.ewrittenappclient.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,7 @@ public class rvStudentAdapter extends RecyclerView.Adapter<rvStudentAdapter.MyVi
     // Define the listener interface
     public interface OnItemClickListener {
         void onItemClick(View itemView,WAppBase rowData, int position);
+        void onItemLongClick(View itemView,WAppBase rowData, int position);
     }
     // Define the method that allows the parent activity or fragment to define the listener
     public void setOnItemClickListener(OnItemClickListener listener) {
@@ -58,6 +60,20 @@ public class rvStudentAdapter extends RecyclerView.Adapter<rvStudentAdapter.MyVi
                             listener.onItemClick(itemView,listData.get(position), position);
                         }
                     }
+                }
+            });
+
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    Log.d("TAG", "onLongClick: ");
+                    if (listener != null) {
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            listener.onItemLongClick(itemView,listData.get(position), position);
+                        }
+                    }
+                    return true;
                 }
             });
         }
