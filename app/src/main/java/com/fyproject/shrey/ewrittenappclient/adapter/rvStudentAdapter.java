@@ -1,16 +1,21 @@
 package com.fyproject.shrey.ewrittenappclient.adapter;
 
 import android.content.Context;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
+import android.support.v7.app.AppCompatDelegate;
+import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.fyproject.shrey.ewrittenappclient.R;
 import com.fyproject.shrey.ewrittenappclient.model.WAppBase;
-import com.fyproject.shrey.ewrittenappclient.model.rvStudentRow;
 
 import java.util.List;
 
@@ -20,8 +25,16 @@ import java.util.List;
  */
 
 public class rvStudentAdapter extends RecyclerView.Adapter<rvStudentAdapter.MyViewHolder> {
+    static { //For enabling usage of vector drawable images
+        if(!AppCompatDelegate.isCompatVectorFromResourcesEnabled())
+            AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+    }
+
     //WAppBase
     private List<WAppBase> listData;
+    private List<Boolean> newIndicator;
+    private Context context;
+    public static boolean newIndicatorRing=true;
     private OnItemClickListener listener;
 
     /***** Creating OnItemClickListener *****/
@@ -41,6 +54,7 @@ public class rvStudentAdapter extends RecyclerView.Adapter<rvStudentAdapter.MyVi
     public class MyViewHolder extends RecyclerView.ViewHolder{
 
         public TextView toName,appType,date,status;
+        public AppCompatImageView ivNewMessage;
 
         public MyViewHolder(final View itemView){
             super(itemView);
@@ -48,6 +62,8 @@ public class rvStudentAdapter extends RecyclerView.Adapter<rvStudentAdapter.MyVi
             appType=(TextView) itemView.findViewById(R.id.tvAppType);
             date=(TextView) itemView.findViewById(R.id.tvDate);
             status=(TextView) itemView.findViewById(R.id.tvStatus);
+            ivNewMessage= (AppCompatImageView) itemView.findViewById(R.id.ivNewMessage);
+            ivNewMessage.setVisibility(View.GONE);
 
             // Setup the click listener
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -80,8 +96,10 @@ public class rvStudentAdapter extends RecyclerView.Adapter<rvStudentAdapter.MyVi
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public rvStudentAdapter(List<WAppBase> listing){
+    public rvStudentAdapter(List<WAppBase> listing,List<Boolean> newIndicatorList,Context c){
         this.listData=listing;
+        this.newIndicator=newIndicatorList;
+        this.context=c;
     }
 
     // Create new views (invoked by the layout manager)
@@ -101,15 +119,35 @@ public class rvStudentAdapter extends RecyclerView.Adapter<rvStudentAdapter.MyVi
         holder.date.setText(data.getDate_submitted());
         holder.status.setText(data.getStatus());  //Can check status here
 
-
+        if(newIndicator.get(position)){
+            holder.ivNewMessage.setVisibility(View.VISIBLE);
+            ringUp();
+        }else holder.ivNewMessage.setVisibility(View.GONE);
     }
-
-//    private Context getContext() {
-//        return ;
-//    }
 
     @Override
     public int getItemCount() {
         return listData.size();
+    }
+
+    public void setNewIndicatorRing(){
+        newIndicatorRing=true;
+    }
+    public boolean getNewIndicatorRing(){
+        return newIndicatorRing;
+    }
+    private void ringUp(){
+        if(newIndicatorRing){
+            try {
+                Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                Ringtone r = RingtoneManager.getRingtone(context, notification);
+                if(r.isPlaying())r.stop();
+                r.play();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        newIndicatorRing=false;
     }
 }

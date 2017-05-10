@@ -3,10 +3,11 @@ package com.fyproject.shrey.ewrittenappclient.activity;
 //This is created by SHREY
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -17,6 +18,7 @@ import com.fyproject.shrey.ewrittenappclient.R;
 import com.fyproject.shrey.ewrittenappclient.fragments.FacultyMain;
 import com.fyproject.shrey.ewrittenappclient.fragments.StudentMain;
 import com.fyproject.shrey.ewrittenappclient.helper.SessionManager;
+import com.fyproject.shrey.ewrittenappclient.helper.WAppLog;
 import com.fyproject.shrey.ewrittenappclient.model.FacultyProfile;
 import com.fyproject.shrey.ewrittenappclient.model.StudentProfile;
 import com.google.firebase.auth.FirebaseAuth;
@@ -39,11 +41,17 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth.AuthStateListener authStateListener;
     private DatabaseReference fbRoot;
     private SessionManager session;
+    private WAppLog wAppLog;
 
     final FragmentManager fragManager = getSupportFragmentManager();
     FragmentTransaction fragTransaction;
 
     Toolbar toolbar;
+
+//    static{ //For enabling usage of vector drawable images
+//        if(!AppCompatDelegate.isCompatVectorFromResourcesEnabled())
+//            AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,10 +62,11 @@ public class MainActivity extends AppCompatActivity {
             FirebaseDatabase.getInstance().setPersistenceEnabled(true);
             persistanceEnabled=true;
         }
-
-        session = new SessionManager(this);
+        
         fbRoot =FirebaseDatabase.getInstance().getReference();
         auth=FirebaseAuth.getInstance();
+        session = new SessionManager(this);
+        wAppLog = new WAppLog(this);
 
         toolbar= (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -88,6 +97,12 @@ public class MainActivity extends AppCompatActivity {
                     Log.d(TAG, "Fetch user type: "+userType);
                     if(userType == null) return;
 
+                    if(session.isUserChanged()){
+                        wAppLog.dropTable();
+                        Log.d(TAG, "onCreate: wAppLog: Table droped as user changed");
+                    }
+                    else Log.d(TAG, "onCreate: USER Not changed");
+
                     //Check type of user
                     if(userType.equals(STUDENT)) {
                         if(getSupportActionBar()!=null) {
@@ -110,6 +125,15 @@ public class MainActivity extends AppCompatActivity {
                     else if(userType==null) {  // no session value available
                         Log.d(TAG, "onAuthStateChanged: Unexpected:: no userType fetched");
                         finish();
+                    }
+                    else{ // ALL OTHER (Principal,staff etc.. ) currenty given faculty module
+                        if (getSupportActionBar() != null) {
+                            getSupportActionBar().setDisplayShowHomeEnabled(true);
+                            getSupportActionBar().setTitle(R.string.faculty_home);
+                        }
+                        fragTransaction = fragManager.beginTransaction();
+                        fragTransaction.replace(R.id.container, facultyMainFragment);
+                        fragTransaction.commit();
                     }
                 }
                 @Override

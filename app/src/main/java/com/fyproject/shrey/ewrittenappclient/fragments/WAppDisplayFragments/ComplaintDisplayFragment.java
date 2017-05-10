@@ -21,7 +21,6 @@ import android.widget.Toast;
 import com.fyproject.shrey.ewrittenappclient.R;
 import com.fyproject.shrey.ewrittenappclient.activity.ViewApplicaion;
 import com.fyproject.shrey.ewrittenappclient.model.WAppComplaint;
-import com.fyproject.shrey.ewrittenappclient.model.WAppLeave;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseError;
@@ -38,10 +37,6 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.fyproject.shrey.ewrittenappclient.R.id.tvEndDate;
-import static com.fyproject.shrey.ewrittenappclient.R.id.tvMessage;
-import static com.fyproject.shrey.ewrittenappclient.R.id.tvStartDate;
-
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -55,7 +50,6 @@ public class ComplaintDisplayFragment extends Fragment {
     private TextView tvDescription;
     private TextView tvStatus;
     private TextView tvResponse;
-
     private Button btnFile;
     private Button btnAccept; //Faculty
     private Button btnReject; //Faculty
@@ -69,8 +63,9 @@ public class ComplaintDisplayFragment extends Fragment {
 
     public String STUDENT;
     public String FACULTY;
-    private String CurrentUserID;
     final String TAG="TAG";
+    final String ACCEPT = "accepted";
+    final String REJECT = "rejected";
 
     private void initialization(View v) {
         tvToName= (TextView) v.findViewById(R.id.tvToName);
@@ -84,7 +79,6 @@ public class ComplaintDisplayFragment extends Fragment {
         btnAccept= (Button) v.findViewById(R.id.btnAccept);
         btnReject= (Button) v.findViewById(R.id.btnReject);
         tvResponse = (TextView) v.findViewById(R.id.tvResponse);
-
         STUDENT = getString(R.string.student);
         FACULTY = getString(R.string.faculty);
         complaintApp = (WAppComplaint) ViewApplicaion.info;
@@ -92,6 +86,14 @@ public class ComplaintDisplayFragment extends Fragment {
         fbRoot = FirebaseDatabase.getInstance().getReference();
         fbstorage = FirebaseStorage.getInstance();
         storageRef = fbstorage.getReference();
+
+        tvToName.append(complaintApp.toName);
+        tvFromName.setText(complaintApp.fromName);
+        tvFromInfo.setText(complaintApp.classInfo);
+        tvType.append(complaintApp.complaintType);
+        tvLevel.append(complaintApp.level);
+        tvDescription.append(complaintApp.message);
+        tvStatus.setText(complaintApp.status.toUpperCase());
 
         //check user type and set UI accordingly
         if( ViewApplicaion.USERTYPE.equals(STUDENT) ){
@@ -106,23 +108,44 @@ public class ComplaintDisplayFragment extends Fragment {
         btnReject.setVisibility(View.GONE);
     }
 
-    private void setUpFacultyGUI(){
+    private void setUpFacultyGUI() {  //FACULTY Display code
         tvToName.setVisibility(View.GONE);
+        //Faculty responded
+        if(complaintApp.status.equals(ACCEPT) || complaintApp.status.equals(REJECT)){
+            btnReject.setVisibility(View.GONE);
+            btnAccept.setVisibility(View.GONE);
+        } else {
+            //Faculty Not yet responded
+            btnAccept.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    UpdateStatus(ACCEPT);
+                }
+            });
+
+            btnReject.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    UpdateStatus(REJECT);
+                }
+            });
+        }
     }
 
     public ComplaintDisplayFragment() {
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view=inflater.inflate(R.layout.fragment_display_complaint, container, false);
+
         initialization(view);
 
         downloadAttachment();
+
         btnFile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -135,38 +158,6 @@ public class ComplaintDisplayFragment extends Fragment {
             }
         });
 
-        if( ViewApplicaion.USERTYPE.equals(STUDENT)) {
-            //STUDENT Display wApp code
-
-            tvToName.append(complaintApp.toName);
-            tvFromName.setText(complaintApp.fromName);
-            tvFromInfo.setText(complaintApp.classInfo);
-            tvType.append(complaintApp.complaintType);
-            tvLevel.append(complaintApp.level);
-            tvDescription.append(complaintApp.message);
-            tvStatus.setText(complaintApp.status.toUpperCase());
-
-
-        }else if( ViewApplicaion.USERTYPE.equals(FACULTY) ) {
-            //FACULTY Display wApp code
-
-
-
-            btnAccept.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    UpdateStatus("accepted");
-                }
-            });
-
-            btnReject.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    UpdateStatus("rejected");
-                }
-            });
-
-        }
         return view;
     }
 

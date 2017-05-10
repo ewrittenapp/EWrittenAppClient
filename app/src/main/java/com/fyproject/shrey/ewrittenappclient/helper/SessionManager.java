@@ -94,10 +94,11 @@ public class SessionManager {
         return null;//no userType found
     }
 
-
-
     public void clearCurrentUser(){
         String userType=getUserType();
+        String thisUser = pref.getString("Uid","null");
+        editor.putString("previousUser",thisUser);
+        Log.d("TAG", "SessionManager : previousUser set - "+thisUser);
 
         if(userType.equals(context.getString(R.string.student))){
             editor.remove(KEY_USER_TYPE);
@@ -117,10 +118,20 @@ public class SessionManager {
             editor.remove("email");
             editor.remove("enroll");
             editor.remove("mobile");
+            editor.remove("Uid");
         }
         editor.commit();
     }
 
+    public boolean isUserChanged(){
+        String previousUser = pref.getString("previousUser","null");
+        String thisUser = pref.getString("Uid","null");
+
+        if(previousUser.equals("null") || previousUser.equals(thisUser))
+            return false;
+        else
+            return true;
+    }
 
     public void setUserType(String user){
         editor.putString(KEY_USER_TYPE,user);

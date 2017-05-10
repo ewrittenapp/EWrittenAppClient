@@ -2,8 +2,14 @@ package com.fyproject.shrey.ewrittenappclient.adapter;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;
+
 import com.fyproject.shrey.ewrittenappclient.R;
-import com.fyproject.shrey.ewrittenappclient.fragments.AppTypeFragments.*;
+import com.fyproject.shrey.ewrittenappclient.fragments.AppTypeFragments.BonafideFragment;
+import com.fyproject.shrey.ewrittenappclient.fragments.AppTypeFragments.ComplaintFragment;
+import com.fyproject.shrey.ewrittenappclient.fragments.AppTypeFragments.CustomWAppFragment;
+import com.fyproject.shrey.ewrittenappclient.fragments.AppTypeFragments.InfrastructureFragment;
+import com.fyproject.shrey.ewrittenappclient.fragments.AppTypeFragments.LeaveFragment;
+import com.fyproject.shrey.ewrittenappclient.fragments.AppTypeFragments.OrganizeEventFragment;
 
 import java.util.ArrayList;
 import java.util.List;

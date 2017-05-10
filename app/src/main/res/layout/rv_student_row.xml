@@ -2,6 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:focusable="true"
     android:paddingTop="5dp"
     android:paddingBottom="3dp"
@@ -25,6 +27,16 @@
         android:layout_below="@id/tvToName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/ivNewMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/tvDate"
+        android:layout_alignEnd="@+id/tvDate"
+        android:layout_below="@+id/tvDate"
+        app:srcCompat="@drawable/ic_new_wapp"
+        android:visibility="visible"/>
 
     <TextView
         android:id="@+id/tvStatus"

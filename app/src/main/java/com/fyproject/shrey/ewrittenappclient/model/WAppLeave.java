@@ -3,7 +3,6 @@ package com.fyproject.shrey.ewrittenappclient.model;
 import android.content.Context;
 
 import com.fyproject.shrey.ewrittenappclient.R;
-import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
 
 import java.text.DateFormat;

@@ -21,7 +21,6 @@ import android.widget.Toast;
 import com.fyproject.shrey.ewrittenappclient.R;
 import com.fyproject.shrey.ewrittenappclient.activity.ViewApplicaion;
 import com.fyproject.shrey.ewrittenappclient.model.WAppCustom;
-import com.fyproject.shrey.ewrittenappclient.model.WAppLeave;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseError;
@@ -38,8 +37,6 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.fyproject.shrey.ewrittenappclient.R.id.tvMessage;
-
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -52,7 +49,6 @@ public class CustomDisplayFragment extends Fragment {
     private TextView tvDescription;
     private TextView tvStatus;
     private TextView tvResponse;
-
     private Button btnFile;
     private Button btnAccept; //Faculty
     private Button btnReject; //Faculty
@@ -66,18 +62,9 @@ public class CustomDisplayFragment extends Fragment {
 
     public String STUDENT;
     public String FACULTY;
-    private String CurrentUserID;
     final String TAG = "TAG";
-
-
-    private void setUpStudentGUI(View v) {
-        btnAccept.setVisibility(View.GONE);
-        btnReject.setVisibility(View.GONE);
-    }
-
-    private void setUpFacultyGUI() {
-        tvToName.setVisibility(View.GONE);
-    }
+    final String ACCEPT = "accepted";
+    final String REJECT = "rejected";
 
     private void initialization(View v) {
         tvToName = (TextView) v.findViewById(R.id.tvToName);
@@ -99,6 +86,13 @@ public class CustomDisplayFragment extends Fragment {
         fbstorage = FirebaseStorage.getInstance();
         storageRef = fbstorage.getReference();
 
+        tvToName.append(customApp.toName);
+        tvFromName.setText(customApp.fromName);
+        tvFromInfo.setText(customApp.classInfo);
+        tvSubject.append(customApp.subject);
+        tvDescription.append(customApp.message);
+        tvStatus.setText(customApp.status.toUpperCase());
+
         //check user type and set UI accordingly
         if (ViewApplicaion.USERTYPE.equals(STUDENT)) {
             setUpStudentGUI(v);
@@ -107,10 +101,39 @@ public class CustomDisplayFragment extends Fragment {
         }
     }
 
+
+    private void setUpStudentGUI(View v) {
+        btnAccept.setVisibility(View.GONE);
+        btnReject.setVisibility(View.GONE);
+    }
+
+    private void setUpFacultyGUI() {  //FACULTY Display code
+        tvToName.setVisibility(View.GONE);
+        //Faculty responded
+        if(customApp.status.equals(ACCEPT) || customApp.status.equals(REJECT)){
+            btnReject.setVisibility(View.GONE);
+            btnAccept.setVisibility(View.GONE);
+        } else {
+            //Faculty Not yet responded
+            btnAccept.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    UpdateStatus(ACCEPT);
+                }
+            });
+
+            btnReject.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    UpdateStatus(REJECT);
+                }
+            });
+        }
+    }
+
     public CustomDisplayFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -132,38 +155,6 @@ public class CustomDisplayFragment extends Fragment {
                 }
             }
         });
-
-        if( ViewApplicaion.USERTYPE.equals(STUDENT)) {
-            //STUDENT Display wApp code
-
-            tvToName.append(customApp.toName);
-            tvFromName.setText(customApp.fromName);
-            tvFromInfo.setText(customApp.classInfo);
-            tvSubject.append(customApp.subject);
-            tvDescription.append(customApp.message);
-            tvStatus.setText(customApp.status.toUpperCase());
-
-
-        }else if( ViewApplicaion.USERTYPE.equals(FACULTY) ) {
-            //FACULTY Display wApp code
-
-
-
-            btnAccept.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    UpdateStatus("accepted");
-                }
-            });
-
-            btnReject.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    UpdateStatus("rejected");
-                }
-            });
-
-        }
 
         return view;
     }

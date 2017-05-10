@@ -8,10 +8,10 @@ import com.google.firebase.database.Exclude;
 
 public class FacultyProfile extends UserProfile{
     public String name;
-    public String email;
+   // public String email;
     public String mobile;
     public String branch;
-    @Exclude public String Uid;
+   // @Exclude public String Uid;
 
     public FacultyProfile(){
     }

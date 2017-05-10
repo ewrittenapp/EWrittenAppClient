@@ -10,25 +10,24 @@ import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fyproject.shrey.ewrittenappclient.R;
 import com.fyproject.shrey.ewrittenappclient.activity.ViewApplicaion;
 import com.fyproject.shrey.ewrittenappclient.model.WAppBonafide;
-import com.fyproject.shrey.ewrittenappclient.model.WAppLeave;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -66,6 +65,8 @@ public class BonafideDisplayFragment extends Fragment {
     public String FACULTY;
     private String CurrentUserID;
     final String TAG = "TAG";
+    final String ACCEPT = "accepted";
+    final String REJECT = "rejected";
 
     private void initialization(View v) {
         tvToName = (TextView) v.findViewById(R.id.tvToName);
@@ -84,6 +85,13 @@ public class BonafideDisplayFragment extends Fragment {
         fbRoot = FirebaseDatabase.getInstance().getReference();
         fbstorage = FirebaseStorage.getInstance();
         storageRef = fbstorage.getReference();
+
+        tvToName.append(bonafideApp.toName);
+        tvFromName.setText(bonafideApp.fromName);
+        tvFromInfo.setText(bonafideApp.classInfo);
+        tvMessage.setText(bonafideApp.message);
+        tvStatus.setText(bonafideApp.status.toUpperCase());
+
         //check user type and set UI accordingly
         if (ViewApplicaion.USERTYPE.equals(STUDENT)) {
             setUpStudentGUI(v);
@@ -97,11 +105,61 @@ public class BonafideDisplayFragment extends Fragment {
     private void setUpStudentGUI(View v) {
         btnAccept.setVisibility(View.GONE);
         btnReject.setVisibility(View.GONE);
-
     }
 
-    private void setUpFacultyGUI() {
+    private void setUpFacultyGUI() {  //FACULTY Display code
         tvToName.setVisibility(View.GONE);
+        //Faculty responded
+        if(bonafideApp.status.equals(ACCEPT) || bonafideApp.status.equals(REJECT)){
+//            btnReject.setVisibility(View.GONE);
+//            btnAccept.setVisibility(View.GONE);
+        } else {
+            //Faculty Not yet responded
+            btnAccept.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    UpdateStatus(ACCEPT);
+                }
+            });
+
+            btnReject.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    View dialogView =  LayoutInflater.from(getContext()).inflate(R.layout.dialog_response,null,false);
+                    final EditText etResponseInput = (EditText) dialogView.findViewById(R.id.etResponseInput);
+                    Button btnReject = (Button) dialogView.findViewById(R.id.btnReject);
+
+//                    btnReject.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View view) {
+//                            if( !TextUtils.isEmpty(etResponseInput.getText()) )
+//                                bonafideApp.response = etResponseInput.getText().toString();
+//
+//                            UpdateStatus(REJECT);
+//                        }
+//                    });
+
+                    builder.setTitle("Confirm reject?");
+                    builder.setPositiveButton("Reject", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            if( !TextUtils.isEmpty(etResponseInput.getText()) )
+                                bonafideApp.response = etResponseInput.getText().toString();
+
+                            UpdateStatus(REJECT);
+                        }
+                    });
+                    builder.setNegativeButton("Cancel",null);
+                    builder.setView(dialogView);
+
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+
+                }
+            });
+        }
     }
 
     public BonafideDisplayFragment() {
@@ -112,36 +170,8 @@ public class BonafideDisplayFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_display_bonafide, container, false);
+
         initialization(view);
-
-
-
-        if (ViewApplicaion.USERTYPE.equals(STUDENT)) {
-            //STUDENT Display wApp code
-            tvToName.append(bonafideApp.toName);
-            tvFromName.setText(bonafideApp.fromName);
-            tvFromInfo.setText(bonafideApp.classInfo);
-            tvMessage.setText(bonafideApp.message);
-            tvStatus.setText(bonafideApp.status.toUpperCase());
-
-        } else if (ViewApplicaion.USERTYPE.equals(FACULTY)) {
-            //FACULTY Display wApp code
-            btnAccept.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    UpdateStatus("accepted");
-                }
-            });
-
-            btnReject.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    UpdateStatus("rejected");
-                }
-            });
-
-        }
-
         downloadAttachment();
 
         btnFile.setOnClickListener(new View.OnClickListener() {

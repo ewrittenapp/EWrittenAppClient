@@ -17,18 +17,14 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fyproject.shrey.ewrittenappclient.R;
 import com.fyproject.shrey.ewrittenappclient.activity.NewApplication;
-import com.fyproject.shrey.ewrittenappclient.activity.ViewApplicaion;
 import com.fyproject.shrey.ewrittenappclient.adapter.spDataAdapter;
 import com.fyproject.shrey.ewrittenappclient.helper.Converter;
-import com.fyproject.shrey.ewrittenappclient.helper.SessionManager;
 import com.fyproject.shrey.ewrittenappclient.model.FacultyList;
 import com.fyproject.shrey.ewrittenappclient.model.StudentProfile;
 import com.fyproject.shrey.ewrittenappclient.model.WAppBonafide;
@@ -40,20 +36,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
-import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.zip.Inflater;
 
 import static android.app.Activity.RESULT_OK;
 

@@ -2,7 +2,6 @@ package com.fyproject.shrey.ewrittenappclient.fragments.WAppDisplayFragments;
 
 
 import android.os.Bundle;
-import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,7 +13,6 @@ import android.widget.Toast;
 
 import com.fyproject.shrey.ewrittenappclient.R;
 import com.fyproject.shrey.ewrittenappclient.activity.ViewApplicaion;
-import com.fyproject.shrey.ewrittenappclient.model.WAppLeave;
 import com.fyproject.shrey.ewrittenappclient.model.WAppOrganizeEvent;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -49,8 +47,9 @@ public class OrganizeEventDisplayFragment extends Fragment {
 
     public String STUDENT;
     public String FACULTY;
-    private String CurrentUserID;
     final String TAG="TAG";
+    final String ACCEPT = "accepted";
+    final String REJECT = "rejected";
 
     private void initialization(View v) {
         tvToName= (TextView) v.findViewById(R.id.tvToName);
@@ -66,12 +65,21 @@ public class OrganizeEventDisplayFragment extends Fragment {
         btnAccept= (Button) v.findViewById(R.id.btnAccept);
         btnReject= (Button) v.findViewById(R.id.btnReject);
         tvResponse = (TextView) v.findViewById(R.id.tvResponse);
-
         STUDENT = getString(R.string.student);
         FACULTY = getString(R.string.faculty);
         eventApp = (WAppOrganizeEvent) ViewApplicaion.info;
 
         FirebaseDatabase.getInstance().getReference();
+
+        tvToName.append(eventApp.toName);
+        tvFromName.setText(eventApp.fromName);
+        tvFromInfo.setText(eventApp.classInfo);
+        tvStatus.setText(eventApp.status.toUpperCase());
+        tvEventName.append(eventApp.eventName);
+        tvFromDate.append(eventApp.startDate);
+        tvThrugh.append(eventApp.endDate);
+        tvTime.append(eventApp.time);
+        tvDescription.append(eventApp.message);
 
         //check user type and set UI accordingly
         if( ViewApplicaion.USERTYPE.equals(STUDENT) ){
@@ -86,13 +94,33 @@ public class OrganizeEventDisplayFragment extends Fragment {
         btnReject.setVisibility(View.GONE);
     }
 
-    private void setUpFacultyGUI(){
+    private void setUpFacultyGUI() {  //FACULTY Display code
         tvToName.setVisibility(View.GONE);
+        //Faculty responded
+        if(eventApp.status.equals(ACCEPT) || eventApp.status.equals(REJECT)){
+            btnReject.setVisibility(View.GONE);
+            btnAccept.setVisibility(View.GONE);
+        } else {
+            //Faculty Not yet responded
+            btnAccept.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    UpdateStatus(ACCEPT);
+                }
+            });
+
+            btnReject.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    UpdateStatus(REJECT);
+                }
+            });
+        }
     }
+
     public OrganizeEventDisplayFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -100,40 +128,6 @@ public class OrganizeEventDisplayFragment extends Fragment {
         // Inflate the layout for this fragment
         View view=inflater.inflate(R.layout.fragment_display_organize_event, container, false);
         initialization(view);
-
-
-        if( ViewApplicaion.USERTYPE.equals(STUDENT)) {
-            //STUDENT Display wApp code
-
-            tvToName.append(eventApp.toName);
-            tvFromName.setText(eventApp.fromName);
-            tvFromInfo.setText(eventApp.classInfo);
-            tvStatus.setText(eventApp.status.toUpperCase());
-            tvEventName.append(eventApp.eventName);
-            tvFromDate.append(eventApp.startDate);
-            tvThrugh.append(eventApp.endDate);
-            tvTime.append(eventApp.time);
-            tvDescription.append(eventApp.message);
-
-
-        }else if( ViewApplicaion.USERTYPE.equals(FACULTY) ) {
-            //FACULTY Display wApp code
-
-            btnAccept.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    UpdateStatus("accepted");
-                }
-            });
-
-            btnReject.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    UpdateStatus("rejected");
-                }
-            });
-
-        }
 
         return view;
     }

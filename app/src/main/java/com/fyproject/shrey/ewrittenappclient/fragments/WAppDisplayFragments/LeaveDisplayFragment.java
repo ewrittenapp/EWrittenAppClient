@@ -10,25 +10,24 @@ import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fyproject.shrey.ewrittenappclient.R;
-import com.fyproject.shrey.ewrittenappclient.activity.NewApplication;
 import com.fyproject.shrey.ewrittenappclient.activity.ViewApplicaion;
 import com.fyproject.shrey.ewrittenappclient.model.WAppLeave;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -37,15 +36,9 @@ import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
 import java.net.URI;
-import java.sql.Struct;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.fyproject.shrey.ewrittenappclient.activity.ViewApplicaion.info;
-
-/**
- * A simple {@link Fragment} subclass.
- */
 public class LeaveDisplayFragment extends Fragment {
 
     private TextView tvToName;
@@ -73,6 +66,8 @@ public class LeaveDisplayFragment extends Fragment {
     public String FACULTY;
     private String CurrentUserID;
     final String TAG = "TAG";
+    final String ACCEPT = "accepted";
+    final String REJECT = "rejected";
 
 
     private void initialization(View v) {
@@ -92,10 +87,19 @@ public class LeaveDisplayFragment extends Fragment {
         FACULTY = getString(R.string.faculty);
         leaveApp = (WAppLeave) ViewApplicaion.info;
         fbRoot = FirebaseDatabase.getInstance().getReference();
-
         fbstorage = FirebaseStorage.getInstance();
-
         storageRef = fbstorage.getReference();
+
+        tvToName.append(leaveApp.toName);
+        tvFromName.setText(leaveApp.fromName);
+        tvFromInfo.setText(leaveApp.classInfo);
+        tvStartDate.append(leaveApp.startDate);
+        tvEndDate.append(leaveApp.endDate);
+        tvMessage.setText(leaveApp.message);
+        tvStatus.setText(leaveApp.status.toUpperCase());
+        String response = "Re:  "+leaveApp.response;
+        if(!leaveApp.response.equals("null")) tvResponse.setText(response);
+
         //check user type and set UI accordingly
         if (ViewApplicaion.USERTYPE.equals(STUDENT)) {
             setUpStudentGUI(v);
@@ -109,8 +113,50 @@ public class LeaveDisplayFragment extends Fragment {
         btnReject.setVisibility(View.GONE);
     }
 
-    private void setUpFacultyGUI() {
+    private void setUpFacultyGUI() {  //FACULTY Display code
         tvToName.setVisibility(View.GONE);
+        //Faculty responded
+        if(leaveApp.status.equals(ACCEPT) || leaveApp.status.equals(REJECT)){
+//            btnReject.setVisibility(View.GONE);
+//            btnAccept.setVisibility(View.GONE);
+        } else {
+            //Faculty Not yet responded
+            btnAccept.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    UpdateStatus(ACCEPT);
+                }
+            });
+
+            btnReject.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    View dialogView =  LayoutInflater.from(getContext()).inflate(R.layout.dialog_response,null,false);
+                    final EditText etResponseInput = (EditText) dialogView.findViewById(R.id.etResponseInput);
+                    Button btnReject = (Button) dialogView.findViewById(R.id.btnReject);
+
+                    btnReject.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            if( !TextUtils.isEmpty(etResponseInput.getText()) )
+                               leaveApp.response = etResponseInput.getText().toString();
+
+                            UpdateStatus(REJECT);
+                        }
+                    });
+
+                    builder.setTitle("Confirm reject?");
+                    builder.setNegativeButton("Cancel",null);
+                    builder.setView(dialogView);
+
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+
+                }
+            });
+        }
     }
 
     public LeaveDisplayFragment() {
@@ -121,8 +167,10 @@ public class LeaveDisplayFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_display_leave, container, false);
+
         initialization(view);
         downloadAttachment();
+
         btnFile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -134,46 +182,6 @@ public class LeaveDisplayFragment extends Fragment {
                 }
             }
         });
-
-        if (ViewApplicaion.USERTYPE.equals(STUDENT)) {
-            //STUDENT Display wApp code
-
-            tvToName.append(leaveApp.toName);
-            tvFromName.setText(leaveApp.fromName);
-            tvFromInfo.setText(leaveApp.classInfo);
-            tvStartDate.append(leaveApp.startDate);
-            tvEndDate.append(leaveApp.endDate);
-            tvMessage.setText(leaveApp.message);
-            tvStatus.setText(leaveApp.status.toUpperCase());
-
-
-        } else if (ViewApplicaion.USERTYPE.equals(FACULTY)) {
-            //FACULTY Display wApp code
-
-
-            tvToName.append(leaveApp.toName);
-            tvFromName.setText(leaveApp.fromName);
-            tvFromInfo.setText(leaveApp.classInfo);
-            tvStartDate.append(leaveApp.startDate);
-            tvEndDate.append(leaveApp.endDate);
-            tvMessage.setText(leaveApp.message);
-            tvStatus.setText(leaveApp.status.toUpperCase());
-
-            btnAccept.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    UpdateStatus("accepted");
-                }
-            });
-
-            btnReject.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    UpdateStatus("rejected");
-                }
-            });
-
-        }
 
         return view;
     }

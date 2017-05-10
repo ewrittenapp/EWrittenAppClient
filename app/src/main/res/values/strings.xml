@@ -21,6 +21,8 @@
         <item>@string/custom</item>
     </string-array>
 
+    <string name="status_pending">pending</string>
+
     <string-array name="ComplaintType">
         <item>Ragging</item>
         <item>canteen</item>

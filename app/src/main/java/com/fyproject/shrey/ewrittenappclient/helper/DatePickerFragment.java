@@ -9,10 +9,7 @@ import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.widget.DatePicker;
 
-import com.fyproject.shrey.ewrittenappclient.fragments.AppTypeFragments.LeaveFragment;
-
 import java.util.Calendar;
-import java.util.Date;
 
 /**
  * Created by shrey on 08/03/17.

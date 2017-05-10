@@ -2,7 +2,6 @@ package com.fyproject.shrey.ewrittenappclient.adapter;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.widget.Toast;
 

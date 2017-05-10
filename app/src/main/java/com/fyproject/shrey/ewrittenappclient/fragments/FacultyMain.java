@@ -1,9 +1,11 @@
 package com.fyproject.shrey.ewrittenappclient.fragments;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,13 +17,11 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.fyproject.shrey.ewrittenappclient.R;
-import com.fyproject.shrey.ewrittenappclient.activity.NewApplication;
 import com.fyproject.shrey.ewrittenappclient.activity.ViewApplicaion;
 import com.fyproject.shrey.ewrittenappclient.adapter.rvFacultyAdapter;
-import com.fyproject.shrey.ewrittenappclient.adapter.rvStudentAdapter;
 import com.fyproject.shrey.ewrittenappclient.helper.SessionManager;
+import com.fyproject.shrey.ewrittenappclient.helper.WAppLog;
 import com.fyproject.shrey.ewrittenappclient.model.FacultyProfile;
-import com.fyproject.shrey.ewrittenappclient.model.StudentProfile;
 import com.fyproject.shrey.ewrittenappclient.model.WAppBase;
 import com.fyproject.shrey.ewrittenappclient.model.WAppBonafide;
 import com.fyproject.shrey.ewrittenappclient.model.WAppComplaint;
@@ -36,6 +36,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import org.json.JSONObject;
+
+import java.io.File;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,10 +50,12 @@ public class FacultyMain extends Fragment {
     private FirebaseAuth auth;
     private FacultyProfile thisFaculty;
     private SessionManager sessionManager;
+    private WAppLog wAppLog; //local log of wApp for new notification purpose
     private RecyclerView rv_wAppList;
     private rvFacultyAdapter rv_Adapter;
     private RecyclerView.LayoutManager rvLayoutManager;
     private List<WAppBase> rv_dataset = new ArrayList<>();
+    private List<Boolean> rv_newIndicator = new ArrayList<>();
     private String TAG="TAG";
     private String no_support="written application type not supported";
 
@@ -57,12 +63,13 @@ public class FacultyMain extends Fragment {
         auth= FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
         dbroot=database.getReference();
+        wAppLog=new WAppLog(getContext());
 
         rv_wAppList= (RecyclerView) v.findViewById(R.id.rv_wAppList);
         rvLayoutManager=new LinearLayoutManager(getContext());
         rv_wAppList.setLayoutManager(rvLayoutManager);
         //set adapter for recycler view
-        rv_Adapter = new rvFacultyAdapter(rv_dataset);
+        rv_Adapter = new rvFacultyAdapter(rv_dataset,rv_newIndicator,getContext());
         rv_wAppList.setAdapter(rv_Adapter);
         //set rv item animator
         rv_wAppList.setItemAnimator(new DefaultItemAnimator());
@@ -72,6 +79,26 @@ public class FacultyMain extends Fragment {
 
         sessionManager=new SessionManager(getContext());
         thisFaculty= (FacultyProfile) sessionManager.getCurrentUser();
+
+//        try {
+//            rootPath = new File(Environment.getExternalStorageDirectory(), "EWAPP/wAppLog");
+//            if (!rootPath.exists()) {
+//                rootPath.mkdirs();
+//            }
+//            wAppLocalList = new File(rootPath,"wAppListLog.json");
+//            if(!wAppLocalList.exists()){
+//                wAppLocalList.createNewFile();
+//            }
+//
+//            FileWriter fWrite = new FileWriter(wAppLocalList);
+//
+////            JSONObject o = new JSONObject()
+//
+//
+//        }catch (Exception e){
+//            Log.d(TAG, "InitVariables Exception: "+e);
+//        }
+
     }
 
     public FacultyMain() {
@@ -82,8 +109,6 @@ public class FacultyMain extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_faculty_main, container, false);
-        InitVariables(view);
-
         InitVariables(view);
         Log.d(TAG, "onCreateView: FacultyMain Frag ");
 
@@ -132,7 +157,7 @@ public class FacultyMain extends Fragment {
                         rowData.setwAppId(ds.getKey());
 
                         rv_dataset.add(0, rowData);
-                        //rv_Adapter.notifyDataSetChanged();
+                        setRv_newIndicator(0, rowData);
                         rv_Adapter.notifyItemInserted(0);
                     }
 
@@ -188,11 +213,18 @@ public class FacultyMain extends Fragment {
 
                     @Override
                     public void onChildRemoved(DataSnapshot ds) {
-//                        WAppBase rowData = ds.getValue(WAppLeave.class);
-//                        rowData.setwAppId(ds.getKey());
-//                        rv_dataset.remove(rowData);
-//                        rv_Adapter.notifyDataSetChanged();
+                        String k = ds.getKey();
+                        int i;
+                        for (i = 0; i < rv_dataset.size(); i++) {
+                            if(rv_dataset.get(i).wAppId.equals(k)) break;
+                        }//i contains index of key
 
+                        WAppBase wapp = rv_dataset.remove(i);
+                        rv_newIndicator.remove(i);
+                        Log.d(TAG, "onChildRemoved: "+wapp);
+
+                        rv_Adapter.notifyItemRemoved(i);
+                        wAppLog.delete(k);
                     }
 
                     @Override
@@ -208,17 +240,22 @@ public class FacultyMain extends Fragment {
                 });
 
         rv_Adapter.setOnItemClickListener(new rvFacultyAdapter.OnItemClickListener() {
+
             @Override
             public void onItemClick(View itemView, WAppBase rowData, int position) {
-                //Toast.makeText(getContext(), "pos: "+position, Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "onItemClick: "+position+") "+rowData);
 
                 Intent info = new Intent(getActivity(), ViewApplicaion.class);
                 info.putExtra("WAPP_INFO", rowData);
-//                info.putExtra("FROM_UID",rowData.fromUid);
-//                info.putExtra("APP_ID",rowData.getwAppId());
-//                info.putExtra("APP_TYPE",rowData.getType());
                 startActivity(info);
+                setNewIndicatorAsVisited(position,rowData);
+            }
+
+            @Override
+            public void onItemLongClick(View itemView, WAppBase rowData, int position) {
+                //Delete Item on Long click
+                deleteItemFromList(rowData);
+
             }
         });
 /*
@@ -248,6 +285,62 @@ public class FacultyMain extends Fragment {
 
 
         return view;
+    }
+
+    private void setRv_newIndicator(int index,WAppBase wApp){
+        String wAppId = wApp.getwAppId();
+        String status = wApp.getStatus();
+        if(status.equals(getResources().getString(R.string.status_pending))){
+            if( wAppLog.isNew(wAppId) ){
+                rv_newIndicator.add(index,Boolean.TRUE);
+                rv_Adapter.setNewIndicatorRing();
+            }
+            else rv_newIndicator.add(index,Boolean.FALSE);
+        }
+        else { // Status is not pending
+            wAppLog.isNew(wAppId);
+            rv_newIndicator.add(index,Boolean.FALSE);
+        }
+
+    }
+
+    private void setNewIndicatorAsVisited(int index,WAppBase rowData){
+        //if rowData at index is New, then mark it as visited
+        if(rv_newIndicator.get(index)){
+            wAppLog.update(rowData.getwAppId(),true);
+            rv_newIndicator.set(index,Boolean.FALSE);
+            rv_Adapter.notifyItemChanged(index);
+            Log.d(TAG, "setNewIndicatorAsVisited: item at index "+index+" visited");
+        }
+    }
+
+    private void deleteItemFromList(final WAppBase rowData){
+
+        String msg = "Are you sure you want to delete "+rowData.type+" from "+rowData.fromName+" ?";
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Confirm delete?");
+        builder.setMessage(msg);
+        builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                //DELETE SELECTED Item
+                String path = "/applicationsNode/" + thisFaculty.getUid() + "/" + rowData.getwAppId();
+                dbroot.child(path).removeValue(new DatabaseReference.CompletionListener() {
+                    @Override
+                    public void onComplete(DatabaseError error, DatabaseReference databaseReference) {
+                        if(error == null){
+                            Toast.makeText(getContext(), "Item Removed", Toast.LENGTH_SHORT).show();
+                        }else{
+                            Log.d(TAG, "onComplete: ERROR:: "+error);
+                        }
+                    }
+                });
+            }
+        });
+        builder.setNegativeButton("Cancel",null);
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
 

@@ -1,11 +1,9 @@
 package com.fyproject.shrey.ewrittenappclient.activity;
 
-import android.support.v4.app.DialogFragment;
+import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,11 +14,8 @@ import android.widget.Toast;
 
 import com.fyproject.shrey.ewrittenappclient.R;
 import com.fyproject.shrey.ewrittenappclient.adapter.wAppTypeAdapter;
-import com.fyproject.shrey.ewrittenappclient.helper.DatePickerFragment;
 import com.fyproject.shrey.ewrittenappclient.helper.SessionManager;
 import com.fyproject.shrey.ewrittenappclient.model.StudentProfile;
-
-import java.util.List;
 
 public class NewApplication extends AppCompatActivity {
 

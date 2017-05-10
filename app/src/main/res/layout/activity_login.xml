@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:fitsSystemWindows="true"
     tools:context=".activity.LoginActivity">
 
@@ -28,7 +28,6 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_below="@+id/toolbar"
         android:gravity="center"
         android:orientation="vertical"
         android:padding="@dimen/activity_horizontal_margin">
@@ -47,16 +46,19 @@
             android:layout_marginBottom="@dimen/et_mb"
             android:layout_marginLeft="@dimen/et_ml"
             android:layout_marginRight="@dimen/et_mr"
+            android:inputType="textEmailAddress"
+
             android:background="@drawable/bg_edit_text_login"
             android:drawableLeft="@drawable/ic_address"
+            android:drawableStart="@drawable/ic_address"
+
             android:drawablePadding="@dimen/et_drawable_padding"
             android:hint="Email"
             android:paddingBottom="@dimen/et_pb"
             android:paddingLeft="@dimen/et_pl"
             android:paddingRight="@dimen/et_pr"
             android:paddingTop="@dimen/et_pt"
-            android:singleLine="true" />
-
+            android:maxLines="1"/>
 
         <EditText
             android:id="@+id/password"
@@ -65,8 +67,11 @@
             android:layout_marginBottom="@dimen/et_mb"
             android:layout_marginLeft="@dimen/et_ml"
             android:layout_marginRight="@dimen/et_mr"
+
             android:background="@drawable/bg_edit_text_login"
-            android:drawableLeft="@drawable/ic_key"
+            android:drawableLeft="@drawable/ic_address"
+            android:drawableStart="@drawable/ic_key"
+
             android:drawablePadding="@dimen/et_drawable_padding"
             android:hint="Password"
             android:inputType="textPassword"
@@ -74,7 +79,7 @@
             android:paddingLeft="@dimen/et_pl"
             android:paddingRight="@dimen/et_pr"
             android:paddingTop="@dimen/et_pt"
-            android:singleLine="true" />
+            android:maxLines="1" />
 
         <!-- Login Button -->
         <Button

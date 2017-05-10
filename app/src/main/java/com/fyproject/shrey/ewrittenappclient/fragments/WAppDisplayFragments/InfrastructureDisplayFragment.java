@@ -21,7 +21,6 @@ import android.widget.Toast;
 import com.fyproject.shrey.ewrittenappclient.R;
 import com.fyproject.shrey.ewrittenappclient.activity.ViewApplicaion;
 import com.fyproject.shrey.ewrittenappclient.model.WAppInfrastructure;
-import com.fyproject.shrey.ewrittenappclient.model.WAppLeave;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseError;
@@ -65,7 +64,8 @@ public class InfrastructureDisplayFragment extends Fragment {
 
     public String STUDENT;
     public String FACULTY;
-    private String CurrentUserID;
+    final String ACCEPT = "accepted";
+    final String REJECT = "rejected";
     final String TAG = "TAG";
 
     private void initialization(View v) {
@@ -83,10 +83,20 @@ public class InfrastructureDisplayFragment extends Fragment {
 
         STUDENT = getString(R.string.student);
         FACULTY = getString(R.string.faculty);
+
         infrastructureApp = (WAppInfrastructure) ViewApplicaion.info;
         fbRoot = FirebaseDatabase.getInstance().getReference();
         fbstorage = FirebaseStorage.getInstance();
         storageRef = fbstorage.getReference();
+
+        tvToName.append(infrastructureApp.toName);
+        tvFromName.setText(infrastructureApp.fromName);
+        tvFromInfo.setText(infrastructureApp.classInfo);
+        tvLocationOfProb.append(infrastructureApp.location);
+        tvProblemType.append(infrastructureApp.issueType);
+        tvDescription.append(infrastructureApp.message);
+        tvStatus.setText(infrastructureApp.status.toUpperCase());
+
         //check user type and set UI accordingly
         if (ViewApplicaion.USERTYPE.equals(STUDENT)) {
             setUpStudentGUI(v);
@@ -100,14 +110,33 @@ public class InfrastructureDisplayFragment extends Fragment {
         btnReject.setVisibility(View.GONE);
     }
 
-    private void setUpFacultyGUI() {
+    private void setUpFacultyGUI() {  //FACULTY Display code
         tvToName.setVisibility(View.GONE);
+        //Faculty responded
+        if(infrastructureApp.status.equals(ACCEPT) || infrastructureApp.status.equals(REJECT)){
+            btnReject.setVisibility(View.GONE);
+            btnAccept.setVisibility(View.GONE);
+        } else {
+            //Faculty Not yet responded
+            btnAccept.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    UpdateStatus(ACCEPT);
+                }
+            });
+
+            btnReject.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    UpdateStatus(REJECT);
+                }
+            });
+        }
     }
 
     public InfrastructureDisplayFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -130,38 +159,6 @@ public class InfrastructureDisplayFragment extends Fragment {
             }
         });
 
-        if( ViewApplicaion.USERTYPE.equals(STUDENT)) {
-            //STUDENT Display wApp code
-
-            tvToName.append(infrastructureApp.toName);
-            tvFromName.setText(infrastructureApp.fromName);
-            tvFromInfo.setText(infrastructureApp.classInfo);
-            tvLocationOfProb.append(infrastructureApp.location);
-            tvProblemType.append(infrastructureApp.issueType);
-            tvDescription.append(infrastructureApp.message);
-            tvStatus.setText(infrastructureApp.status.toUpperCase());
-
-
-        }else if( ViewApplicaion.USERTYPE.equals(FACULTY) ) {
-            //FACULTY Display wApp code
-
-
-
-            btnAccept.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    UpdateStatus("accepted");
-                }
-            });
-
-            btnReject.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    UpdateStatus("rejected");
-                }
-            });
-
-        }
         return view;
     }
 
