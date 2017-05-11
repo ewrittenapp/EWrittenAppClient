@@ -12,12 +12,12 @@
         android:hint="Write response (optional)"
         />
 
-    <Button
-        android:id="@+id/btnReject"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Reject"
-        android:layout_weight="1"/>
+    <!--<Button-->
+        <!--android:id="@+id/btnReject"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="Reject"-->
+        <!--android:layout_weight="1"/>-->
 
 
 

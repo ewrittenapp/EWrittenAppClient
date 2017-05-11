@@ -117,8 +117,8 @@ public class LeaveDisplayFragment extends Fragment {
         tvToName.setVisibility(View.GONE);
         //Faculty responded
         if(leaveApp.status.equals(ACCEPT) || leaveApp.status.equals(REJECT)){
-//            btnReject.setVisibility(View.GONE);
-//            btnAccept.setVisibility(View.GONE);
+            btnReject.setVisibility(View.GONE);
+            btnAccept.setVisibility(View.GONE);
         } else {
             //Faculty Not yet responded
             btnAccept.setOnClickListener(new View.OnClickListener() {
@@ -132,27 +132,25 @@ public class LeaveDisplayFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
 
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                    View dialogView =  LayoutInflater.from(getContext()).inflate(R.layout.dialog_response,null,false);
-                    final EditText etResponseInput = (EditText) dialogView.findViewById(R.id.etResponseInput);
-                    Button btnReject = (Button) dialogView.findViewById(R.id.btnReject);
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                View dialogView =  LayoutInflater.from(getContext()).inflate(R.layout.dialog_response,null,false);
+                final EditText etResponseInput = (EditText) dialogView.findViewById(R.id.etResponseInput);
 
-                    btnReject.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            if( !TextUtils.isEmpty(etResponseInput.getText()) )
-                               leaveApp.response = etResponseInput.getText().toString();
+                builder.setTitle("Confirm reject?");
+                builder.setPositiveButton("Reject", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        if( !TextUtils.isEmpty(etResponseInput.getText()) )
+                            leaveApp.response = etResponseInput.getText().toString();
 
-                            UpdateStatus(REJECT);
-                        }
-                    });
+                        UpdateStatus(REJECT);
+                    }
+                });
+                builder.setNegativeButton("Cancel",null);
+                builder.setView(dialogView);
 
-                    builder.setTitle("Confirm reject?");
-                    builder.setNegativeButton("Cancel",null);
-                    builder.setView(dialogView);
-
-                    AlertDialog dialog = builder.create();
-                    dialog.show();
+                AlertDialog dialog = builder.create();
+                dialog.show();
 
                 }
             });

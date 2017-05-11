@@ -1,10 +1,14 @@
 package com.fyproject.shrey.ewrittenappclient.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,7 +27,7 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private ProgressBar progressBar;
-    private Button btnLogin ;
+    private Button btnLogin, btn_reset_password ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +37,7 @@ public class LoginActivity extends AppCompatActivity {
         inputPassword = (EditText) findViewById(R.id.password);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         btnLogin = (Button) findViewById(R.id.btn_login);
+        btn_reset_password = (Button) findViewById(R.id.btn_reset_password);
 
         auth = FirebaseAuth.getInstance();
 
@@ -72,6 +77,48 @@ public class LoginActivity extends AppCompatActivity {
                                 }
                             }
                         });
+            }
+        });
+
+        //Reset Password button
+        btn_reset_password.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                //launch reset password dialog
+                AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+                View dialogView =  LayoutInflater.from(LoginActivity.this).inflate(R.layout.dialog_reset_password,null,false);
+                final EditText etResetEmail = (EditText) dialogView.findViewById(R.id.resetEmail);
+                Button btnReset = (Button) dialogView.findViewById(R.id.btnReset);
+
+                btnReset.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        if(!TextUtils.isEmpty(etResetEmail.getText())){
+                            String email= etResetEmail.getText().toString().trim();
+                            //send email
+                            progressBar.setVisibility(View.VISIBLE);
+                            auth.sendPasswordResetEmail(email)
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            Toast.makeText(LoginActivity.this, "We have sent you instructions to reset your password!", Toast.LENGTH_LONG).show();
+                                        } else {
+                                            Toast.makeText(LoginActivity.this, "Failed to send reset email!", Toast.LENGTH_LONG).show();
+                                        }
+                                        progressBar.setVisibility(View.GONE);
+                                    }
+                                });
+                        }
+                    }
+                });
+
+                builder.setTitle("Forgot password?");
+                builder.setView(dialogView);
+                AlertDialog dialog = builder.create();
+                dialog.show();
             }
         });
 

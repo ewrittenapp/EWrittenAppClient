@@ -111,8 +111,8 @@ public class BonafideDisplayFragment extends Fragment {
         tvToName.setVisibility(View.GONE);
         //Faculty responded
         if(bonafideApp.status.equals(ACCEPT) || bonafideApp.status.equals(REJECT)){
-//            btnReject.setVisibility(View.GONE);
-//            btnAccept.setVisibility(View.GONE);
+            btnReject.setVisibility(View.GONE);
+            btnAccept.setVisibility(View.GONE);
         } else {
             //Faculty Not yet responded
             btnAccept.setOnClickListener(new View.OnClickListener() {
@@ -129,7 +129,7 @@ public class BonafideDisplayFragment extends Fragment {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                     View dialogView =  LayoutInflater.from(getContext()).inflate(R.layout.dialog_response,null,false);
                     final EditText etResponseInput = (EditText) dialogView.findViewById(R.id.etResponseInput);
-                    Button btnReject = (Button) dialogView.findViewById(R.id.btnReject);
+                 //   Button btnReject = (Button) dialogView.findViewById(R.id.btnReject);
 
 //                    btnReject.setOnClickListener(new View.OnClickListener() {
 //                        @Override

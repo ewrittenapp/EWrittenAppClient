@@ -10,11 +10,13 @@ import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -126,7 +128,26 @@ public class ComplaintDisplayFragment extends Fragment {
             btnReject.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    UpdateStatus(REJECT);
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    View dialogView =  LayoutInflater.from(getContext()).inflate(R.layout.dialog_response,null,false);
+                    final EditText etResponseInput = (EditText) dialogView.findViewById(R.id.etResponseInput);
+
+                    builder.setTitle("Confirm reject?");
+                    builder.setPositiveButton("Reject", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            if( !TextUtils.isEmpty(etResponseInput.getText()) )
+                                complaintApp.response = etResponseInput.getText().toString();
+
+                            UpdateStatus(REJECT);
+                        }
+                    });
+                    builder.setNegativeButton("Cancel",null);
+                    builder.setView(dialogView);
+
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
                 }
             });
         }

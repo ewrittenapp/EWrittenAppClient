@@ -84,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
             final StudentMain studentMainFragment=new StudentMain();
             final FacultyMain facultyMainFragment=new FacultyMain();
 
+            //fetch user data and set session info
             FetchStudentData(user);
             FetchFacultyData(user);
 
@@ -99,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
 
                     if(session.isUserChanged()){
                         wAppLog.dropTable();
+
                         Log.d(TAG, "onCreate: wAppLog: Table droped as user changed");
                     }
                     else Log.d(TAG, "onCreate: USER Not changed");
