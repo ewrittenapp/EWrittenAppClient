@@ -170,7 +170,7 @@ public class ComplaintDisplayFragment extends Fragment {
         btnFile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (complaintApp.attachedFile != "null") {
+                if (!complaintApp.attachedFile.equals("null")) {
                     //**** @Shahrukh TO-DO: CHECK THIS FUNCTION AND USE IT as per requirement
                     viewFile(fileUri);
                 } else {
@@ -183,7 +183,7 @@ public class ComplaintDisplayFragment extends Fragment {
     }
 
     private void downloadAttachment() {
-        if (complaintApp.attachedFile != "null") {
+        if (!complaintApp.attachedFile.equals("null")) {
             //Code to download file
             File rootPath = new File(Environment.getExternalStorageDirectory(), "EWAPP");
             if (!rootPath.exists()) {

@@ -172,7 +172,7 @@ public class LeaveDisplayFragment extends Fragment {
         btnFile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (leaveApp.attachedFile != "null") {
+                if (!leaveApp.attachedFile.equals("null")) {
                     //**** @Shahrukh TO-DO: CHECK THIS FUNCTION AND USE IT as per requirement
                     viewFile(fileUri);
                 } else {
@@ -184,16 +184,20 @@ public class LeaveDisplayFragment extends Fragment {
         return view;
     }
 
-
-    //**** @Shahrukh TO-DO: CHECK THIS FUNCTION AND USE IT as per requirement
     private void downloadAttachment() {
-        if (leaveApp.attachedFile != "null") {
+        if ( !leaveApp.attachedFile.equals("null") ){
             //Code to download file
             File rootPath = new File(Environment.getExternalStorageDirectory(), "EWAPP");
             if (!rootPath.exists()) {
                 rootPath.mkdirs();
             }
             final File localFile = new File(rootPath, leaveApp.attachedFile);
+
+            if(localFile.exists()){ //Check if file already exists
+                Log.d(TAG, "downloadAttachment: File already exists");
+                return;
+            }
+            Log.d(TAG, "downloadAttachment: Downloading File . . .");
             fileUri = localFile.toURI();
             StorageReference ref = storageRef.child(leaveApp.attachedFile);
             ref.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {

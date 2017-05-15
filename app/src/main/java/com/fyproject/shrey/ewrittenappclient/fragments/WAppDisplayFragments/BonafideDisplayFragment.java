@@ -177,7 +177,7 @@ public class BonafideDisplayFragment extends Fragment {
         btnFile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (bonafideApp.attachedFile.equals("null") ) {
+                if (!bonafideApp.attachedFile.equals("null") ) {
                     //**** @Shahrukh TO-DO: CHECK THIS FUNCTION AND USE IT as per requirement
                     viewFile(fileUri);
                 } else {
@@ -190,7 +190,7 @@ public class BonafideDisplayFragment extends Fragment {
     }
 
     private void downloadAttachment() {
-        if (bonafideApp.attachedFile.equals("null") ) {
+        if (!bonafideApp.attachedFile.equals("null") ) {
             //Code to download file
             File rootPath = new File(Environment.getExternalStorageDirectory(), "EWAPP");
             if (!rootPath.exists()) {
@@ -198,6 +198,12 @@ public class BonafideDisplayFragment extends Fragment {
             }
             final File localFile = new File(rootPath, bonafideApp.attachedFile);
             fileUri = localFile.toURI();
+
+            if(localFile.exists()){ //Check if file already exists
+                Log.d(TAG, "downloadAttachment: File already exists");
+                return;
+            }
+
             StorageReference ref = storageRef.child(bonafideApp.attachedFile);
             ref.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                 @Override

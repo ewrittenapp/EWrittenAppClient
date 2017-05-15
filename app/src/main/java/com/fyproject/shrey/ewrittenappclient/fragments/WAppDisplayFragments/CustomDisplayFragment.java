@@ -168,7 +168,7 @@ public class CustomDisplayFragment extends Fragment {
         btnFile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (customApp.attachedFile != "null") {
+                if (!customApp.attachedFile.equals("null")) {
                     //**** @Shahrukh TO-DO: CHECK THIS FUNCTION AND USE IT as per requirement
                     viewFile(fileUri);
                 } else {
@@ -181,7 +181,7 @@ public class CustomDisplayFragment extends Fragment {
     }
 
     private void downloadAttachment() {
-        if (customApp.attachedFile != "null") {
+        if (!customApp.attachedFile.equals("null")) {
             //Code to download file
             File rootPath = new File(Environment.getExternalStorageDirectory(), "EWAPP");
             if (!rootPath.exists()) {

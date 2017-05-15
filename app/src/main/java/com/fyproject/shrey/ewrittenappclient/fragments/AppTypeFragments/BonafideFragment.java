@@ -339,16 +339,6 @@ public class BonafideFragment extends Fragment {
 
     }*/
 
-    private void btnSubmitClickEvent() {
-        btnSubmit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //upload data to firebase
-            }
-        });
-    }
-
-
     @Override
     public void onPause() {
         super.onPause();
