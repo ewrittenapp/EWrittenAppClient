@@ -192,13 +192,13 @@ public class LeaveDisplayFragment extends Fragment {
                 rootPath.mkdirs();
             }
             final File localFile = new File(rootPath, leaveApp.attachedFile);
-
+            fileUri = localFile.toURI();
             if(localFile.exists()){ //Check if file already exists
                 Log.d(TAG, "downloadAttachment: File already exists");
                 return;
             }
             Log.d(TAG, "downloadAttachment: Downloading File . . .");
-            fileUri = localFile.toURI();
+
             StorageReference ref = storageRef.child(leaveApp.attachedFile);
             ref.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                 @Override
