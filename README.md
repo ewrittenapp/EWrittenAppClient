@@ -1,0 +1,5 @@
+# EWrittenAppClient
+
+E – Written Application is android-based application, which is designed to simplify the process of drafting and sending a written application. This app is very useful when you need to send applications to Electricity Board, Municipal Corporation, University etc. for any purpose. With this app, the user can get status of submitted application. The receiving end is facilitated with options for immediate feedback, thus making the entire process lucid and simplified. In this project, we have taken the University scenario, in order to demonstrate the app features. The main interaction is between student and professors, principal, office staff. By using this app, students can write application to their respective class coordinator, on subjects such as leaving application, bona-fide certificate request, permission for organizing event, complain etc.
+
+For more project related reference, <a href="https://drive.google.com/drive/folders/0BwG2e4UOOp1oLWQyOVBHQkZEa2M">see here.</a>
